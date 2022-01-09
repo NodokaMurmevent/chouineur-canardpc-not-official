@@ -3,42 +3,60 @@
 {% block title %}Hello IndexController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
 <div class="example-wrapper">
-    <h1>Et bin alors ça chouine ?</h1>
-{# <pre>
-    {{ dump(articlesFree) }}
-</pre>
-<pre>
-    {{ dump(articlesError) }}
-</pre> #}
+    <h2 class="text-3xl text-center mt-4 mb-8 text-slate-200">Tu cherches des chouineurs à sauver ?</h2>
+
+<ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
 {% for article in articlesChouineur %}
-
-    <p>
-    <img style="float:left; height:auto; width:100px; margin:5px;" src=" {{article.imageUrl}}" alt="{{article.title | raw}}"> <a href="{{article.link}}" target="_blank" rel="noopener noreferrer">{{article.title | raw}}</a> <br/>
-
-    Il y a actuellement
-    {% if article.chouineurs > 0 %}<b>{% endif %}
-    {{article.chouineurs}} {% if article.chouineurs > 0 %}</b>{% endif %}chouineur(s) sur cet article</p>
-    <hr style="clear:both; padding-top:5px;"> 
+  <li class="relative">
+    <div class="group shadow block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-sky-500 overflow-hidden">
+      <img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover pointer-events-none transition-all group-hover:opacity-75">
+      <a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
+        <span class="sr-only">{{article.title | raw}}</span>
+      </a>
+    </div>
+    <a href="{{article.link}}" class="mt-2 block text-sm font-medium text-slate-300 truncate">{{article.title | raw}}</a>
+    <p class="block text-sm font-medium text-slate-400">Il y a {{article.chouineurs}} chouineur{% if article.chouineurs > 1 %}s{% endif %}</p>
+  </li>
  {% endfor %}
-{#
-<pre>
-    {{ dump(articlesChouineur) }}
-</pre>
 
-{# {% if page > 1 %}
-    <a href="{{ path('scrapping',{"page": page - 1}) }}">Précédent</a>
-{% endif %}
-<a href="{{ path('scrapping',{"page": page + 1}) }}">Suivant</a>
-<a href="{{ path('scrapping',{"page": page + 1}) }}">Suivant</a>
-{% if page < pages %}
-    <a href="{{ path('scrapping',{"page": page - 1}) }}">Précédent</a>
-{% endif %}
-<a href="{{ path('scrapping',{"page": page + 1}) }}">Suivant</a>
-</div> #}
+ </ul>
+
+
+<div class="example-wrapper">
+    <h2 class="text-3xl text-center mt-4 mb-8 text-slate-200">Ou lire un article gratuit ?</h2>
+
+<ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+{% for article in articlesFree %}
+  <li class="relative">
+    <div class="group shadow block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-sky-500 overflow-hidden">
+      <img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover pointer-events-none group-hover:opacity-75">
+      <a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
+        <span class="sr-only">{{article.title | raw}}</span>
+      </a>
+    </div>
+    <p class="mt-2 block text-sm font-medium text-slate-300 truncate pointer-events-none">{{article.title | raw}}</p>
+</li>
+ {% endfor %}
+
+ </ul>
+
+    <h2 class="text-3xl text-center mt-4 mb-8 text-slate-200">Voir même un article au pif ?</h2>
+
+<ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+{% for article in articlesRandom %}
+  <li class="relative">
+    <div class="group shadow block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-sky-500 overflow-hidden">
+      <img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover pointer-events-none transition-all group-hover:opacity-75">
+      <a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
+        <span class="sr-only">{{article.title | raw}}</span>
+      </a>
+    </div>
+    <a href="{{article.link}}" class="mt-2 block text-sm font-medium text-slate-300 truncate">{{article.title | raw}}</a>
+  </li>
+ {% endfor %}
+
+ </ul>
+
 {% endblock %}

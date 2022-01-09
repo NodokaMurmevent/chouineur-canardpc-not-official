@@ -35,9 +35,6 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
     */
-     /**
-      * @return Article[] Returns an array of Article objects
-      */
     
     public function findByChouineurs()
     {
@@ -50,6 +47,23 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
     
+      public function findAllId()
+      {
+          return $this
+                ->createQueryBuilder('a')
+                ->select("a.id")
+                ->getQuery()
+                ->getScalarResult();
+      }
+
+        
+      public function findRandomArticle($ids)
+      {
+        $em = $this->getEntityManager();
+          return $em->createQuery("SELECT a FROM App\Entity\Article a WHERE a.id IN (:ids) ")->setParameter('ids',$ids)->getResult();
+          
+      }
+      
     /*
     public function findOneBySomeField($value): ?Article
     {

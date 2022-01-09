@@ -41,6 +41,9 @@ class PopulateController extends AbstractController
                     $chouineur = $crawler->filter('.whines')->filter('p')->text();
                     $article->setChouineurs(intval($chouineur));
                     dump('article mis a jour');
+                    dump($article);
+                    $em->persist($article);
+                    $em->flush();
                     ++$a;
                 }
                 //    dump("article présent et ignoré");
@@ -50,19 +53,25 @@ class PopulateController extends AbstractController
                 $article->setExcerpt(strip_tags($jsonData[$i]['excerpt']['rendered']));
                 $article->setGuid($jsonData[$i]['id']);
                 $article->setLink($jsonData[$i]['link']);
-                
+                dump($article->getLink());
                 if ('' !== $jsonData[$i]['featured_media']) {
                     $article->setImageALaUne($jsonData[$i]['featured_media']);
-                    $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$article->getImageALaUne());
-                    $imageUrlData = json_decode($imageUrl, true);
-                    $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
+                    $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$jsonData[$i]['featured_media']);
+                    $imageUrlData = json_decode($imageUrl, true);        
+                    
+                    if ( $imageUrlData['media_details']['sizes']!= [] ) {                        
+                        $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
+                    }else{
+                        $article->setImageUrl("https://cdn.canardware.com/".$imageUrlData['media_details']["file"]);
+                    }                     
+                   
                 }
                 $article->setTitle(strip_tags($jsonData[$i]['title']['rendered']));
                 $article->setCreatedAt(new \DateTimeImmutable($jsonData[$i]['date_gmt']));
                 $article->setModifiedAt(new \DateTimeImmutable($jsonData[$i]['modified_gmt']));
                 $article->setUpdatedAt(new \DateTimeImmutable('now'));
                 $crawler = $client->request('GET', $article->getLink());
-                dump($article->getLink());
+                
                 if ($crawler->filter('.error-404')->count() > 0) {     
                     $article->setIs404(true);
                     $article->setChouineurs(0);
@@ -80,11 +89,12 @@ class PopulateController extends AbstractController
                 }
 
                 dump('nouvel article');
+                dump($article);
+                $em->persist($article);
+                $em->flush();
                 ++$a;
             }
-            dump($article);
-            $em->persist($article);
-            $em->flush();
+           
             if ($i == $parPage - 1) {
                 ++$page;
                 $json = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?page='.$page.'&per_page='.$parPage);

@@ -16,8 +16,12 @@ Si vous vous amusez à DDOS le site de CPC ça vas pas le faire !
 ### Pour installer le machin : 
 
 1. installez symfony <https://symfony.com/download>
+1. installez yarn
 2. clonez ce github
-3. faites `composer install` dans le dossier cloné
+3
+    A. faites `composer install` dans le dossier cloné
+    B. faites `yarn install` dans le dossier cloné (peut etre remplacé par npm mais demerdez vous :D )
+    C. faites `yarn build` dans le dossier cloné (peut etre remplacé par npm mais demerdez vous :D )
 4. lancez le server local de dev symfony : `symfony server:start`
 5. `symfony console doctrine:database:create`
 6. `symfony console doctrine:schema:update`
@@ -28,5 +32,5 @@ Si vous vous amusez à DDOS le site de CPC ça vas pas le faire !
 
 - [ ] Automatiser la mise à jour journalière des articles de 2 derniers mois.
 - [ ] Automatiser la mise à jour hebdomadaire des anciens articles.
-- [ ] Faire un design. çæ peut etre bien aussi.
+- [ ] Faire un design. Ça peut etre bien aussi.
 - [ ] Trouver une solution alternative à l‘update des chouineurs.

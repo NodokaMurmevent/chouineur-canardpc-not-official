@@ -16,8 +16,14 @@ class IndexController extends AbstractController
     #[Route('/', name: 'index')]
     public function index( ArticleRepository $articleRepository): Response
     {
+          
+        
+        $ids = array_rand(array_column($articleRepository->findAllId(),"id"),4);
+
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
+            "articlesRandom" => $articleRepository->findRandomArticle($ids),
+            // "articlesRandom" => $articleRepository->findRandomArticle(),
             "articlesChouineur" => $articleRepository->findByChouineurs(),
             // "articlesPremium" => $articleRepository->findBy(["isFreeContent" => false]),
             "articlesFree" => $articleRepository->findBy(["isFreeContent" => true]),
