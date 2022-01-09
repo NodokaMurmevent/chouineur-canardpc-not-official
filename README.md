@@ -1,4 +1,4 @@
-# chouineur-canardpc-not-official
+# CHOUINEURS ! CHOUINEUSE ! JE VOUS AI, COMPRIS !
 
 Tentative de rassembler les chouinneries infinis des canards en manque de contenu de manier plus centralisé
 
@@ -20,3 +20,13 @@ Pour installer le machin :
 3) faites `composer install` dans le dossier cloné
 4) lancez le server local de dev symfony : `symfony server:start`
 5) vous avez un serveur de dev qui fonctionne ici : https://127.0.0.1:8000/
+
+
+TODO : 
+
+(en vrac)
+
+Automatiser la mise à jour journalière des articles de 2 derniers mois.
+Automatiser la mise à jour hebdomadaire des anciens articles.
+Faire un design. çæ peut etre bien aussi.
+trouver une solution alternative à l‘update des chouineurs.
