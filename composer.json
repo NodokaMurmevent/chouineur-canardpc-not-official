@@ -28,6 +28,7 @@
         "symfony/mime": "6.0.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/notifier": "6.0.*",
+        "symfony/panther": "^2.0",
         "symfony/process": "6.0.*",
         "symfony/property-access": "6.0.*",
         "symfony/property-info": "6.0.*",
@@ -45,6 +46,7 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "dbrekelmans/bdi": "^1.0",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.0.*",
         "symfony/css-selector": "6.0.*",
@@ -102,7 +104,8 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.0.*"
+            "require": "6.0.*",
+            "docker": true
         }
     }
 }

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello IndexController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Et bin alors ça chouine ?</h1>
+{# <pre>
+    {{ dump(articlesFree) }}
+</pre>
+<pre>
+    {{ dump(articlesError) }}
+</pre> #}
+{% for article in articlesChouineur %}
+
+    <p>
+    <img style="float:left; height:auto; width:100px; margin:5px;" src=" {{article.imageUrl}}" alt="{{article.title | raw}}"> <a href="{{article.link}}" target="_blank" rel="noopener noreferrer">{{article.title | raw}}</a> <br/>
+
+    Il ya actuelement 
+    {% if article.chouineurs > 0 %}<b>{% endif %}
+    {{article.chouineurs}} {% if article.chouineurs > 0 %}</b>{% endif %}chouineur(s) sur cet article</p>
+    <hr style="clear:both; padding-top:5px;"> 
+ {% endfor %}
+{#
+<pre>
+    {{ dump(articlesChouineur) }}
+</pre>
+
+{# {% if page > 1 %}
+    <a href="{{ path('scrapping',{"page": page - 1}) }}">Précédent</a>
+{% endif %}
+<a href="{{ path('scrapping',{"page": page + 1}) }}">Suivant</a>
+<a href="{{ path('scrapping',{"page": page + 1}) }}">Suivant</a>
+{% if page < pages %}
+    <a href="{{ path('scrapping',{"page": page - 1}) }}">Précédent</a>
+{% endif %}
+<a href="{{ path('scrapping',{"page": page + 1}) }}">Suivant</a>
+</div> #}
+{% endblock %}
