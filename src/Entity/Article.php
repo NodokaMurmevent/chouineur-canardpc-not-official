@@ -25,7 +25,7 @@ class Article
     #[ORM\Column(type: 'string', length: 255,unique:true)]
     private $guid;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $chouineurs;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -37,7 +37,7 @@ class Article
     #[ORM\Column(type: 'datetime_immutable')]
     private $modifiedAt;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private $isFreeContent;
 
     #[ORM\Column(type: 'boolean')]

@@ -12,7 +12,102 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PopulateController extends AbstractController
 {
-    #[Route('/populate', name: 'populate')]
+    #[Route('/articles/get-news-articles', name: 'article_get_news_articles')]
+    public function articleFetch(EntityManagerInterface $em, ArticleRepository $articleRepository)
+    {
+
+        $page = 1;
+        $parPage = 10;
+
+        $last = $articleRepository->findOneBy([], ['createdAt' => 'DESC']);
+        $date = $last->getCreatedAt();
+        dump($date->format("Y-m-d\TH:i:sO"));
+        $jsonData = json_decode(file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?after='.$date->format("Y-m-d\TH:i:s").'&page='.$page.'&per_page='.$parPage.'&order=asc'),true);
+    
+        foreach ($jsonData as $value) {
+            $article = new Article();           
+
+            $article->setTitle(strip_tags($value['title']['rendered']));
+            $article->setExcerpt(strip_tags($value['excerpt']['rendered']));
+            $article->setGuid($value['id']);
+            $article->setLink($value['link']);
+
+            $article->setCreatedAt(new \DateTimeImmutable($value['date_gmt']));
+            $article->setModifiedAt(new \DateTimeImmutable($value['modified_gmt']));
+            $article->setUpdatedAt(new \DateTimeImmutable('now')); 
+
+            if ('' !== $value['featured_media']) {
+                $article->setImageALaUne($value['featured_media']);
+                try {
+                    $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$value['featured_media']);
+                    $imageUrlData = json_decode($imageUrl, true);
+                    if ([] != $imageUrlData['media_details']['sizes']) {
+                        $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
+                    } else {
+                        $article->setImageUrl('https://cdn.canardware.com/'.$imageUrlData['media_details']['file']);
+                    }
+                } catch (\Throwable $th) {                    
+                    $article->setImageALaUne(null);              
+                }  
+            }
+            $em->persist($article);    
+            dump($article);
+        }
+
+        // dump($last);
+        exit();
+        $em->flush();
+    }
+
+
+    #[Route('/articles/populate-from-start', name: 'populate_from_start')]
+    public function populate(EntityManagerInterface $em, ArticleRepository $articleRepository): Response
+    {
+        $offset = $articleRepository->count([]);
+        dump($offset);
+        $jsonData = json_decode(file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?offset='.$offset.'&order=asc&per_page=200'),true);
+
+        foreach ($jsonData as $value) {
+            $article = new Article();           
+
+            $article->setTitle(strip_tags($value['title']['rendered']));
+            $article->setExcerpt(strip_tags($value['excerpt']['rendered']));
+            $article->setGuid($value['id']);
+            $article->setLink($value['link']);
+
+            $article->setCreatedAt(new \DateTimeImmutable($value['date_gmt']));
+            $article->setModifiedAt(new \DateTimeImmutable($value['modified_gmt']));
+            $article->setUpdatedAt(new \DateTimeImmutable('now')); 
+
+            if ('' !== $value['featured_media']) {
+                $article->setImageALaUne($value['featured_media']);
+                try {
+                    $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$value['featured_media']);
+                    $imageUrlData = json_decode($imageUrl, true);
+                    if ([] != $imageUrlData['media_details']['sizes']) {
+                        $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
+                    } else {
+                        $article->setImageUrl('https://cdn.canardware.com/'.$imageUrlData['media_details']['file']);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;     
+                    $article->setImageALaUne(null);              
+                }  
+            }
+            $em->persist($article);    
+            // dump($article);
+        }
+        $em->flush();
+        exit();
+        $em->flush();
+
+        return $this->render('populate/index.html.twig', [
+            'controller_name' => 'PopulateController',
+        ]);
+    }
+
+
+    // #[Route('/populate', name: 'populate')]
     public function index(EntityManagerInterface $em, ArticleRepository $articleRepository): Response
     {
         $i = 0;
@@ -57,35 +152,33 @@ class PopulateController extends AbstractController
                 if ('' !== $jsonData[$i]['featured_media']) {
                     $article->setImageALaUne($jsonData[$i]['featured_media']);
                     $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$jsonData[$i]['featured_media']);
-                    $imageUrlData = json_decode($imageUrl, true);        
-                    
-                    if ( $imageUrlData['media_details']['sizes']!= [] ) {                        
+                    $imageUrlData = json_decode($imageUrl, true);
+
+                    if ([] != $imageUrlData['media_details']['sizes']) {
                         $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
-                    }else{
-                        $article->setImageUrl("https://cdn.canardware.com/".$imageUrlData['media_details']["file"]);
-                    }                     
-                   
+                    } else {
+                        $article->setImageUrl('https://cdn.canardware.com/'.$imageUrlData['media_details']['file']);
+                    }
                 }
                 $article->setTitle(strip_tags($jsonData[$i]['title']['rendered']));
                 $article->setCreatedAt(new \DateTimeImmutable($jsonData[$i]['date_gmt']));
                 $article->setModifiedAt(new \DateTimeImmutable($jsonData[$i]['modified_gmt']));
                 $article->setUpdatedAt(new \DateTimeImmutable('now'));
                 $crawler = $client->request('GET', $article->getLink());
-                
-                if ($crawler->filter('.error-404')->count() > 0) {     
+
+                if ($crawler->filter('.error-404')->count() > 0) {
                     $article->setIs404(true);
                     $article->setChouineurs(0);
                     $article->setIsFreeContent(false);
-
-                } elseif ($access = $crawler->filter('.post-access') ) {
+                } elseif ($access = $crawler->filter('.post-access')) {
                     if ('Accessible à tout le monde' == $access->text()) {
                         $article->setIsFreeContent(true);
                         $article->setChouineurs(0);
-                    }elseif('Accessible uniquement aux abonnés' == $access->text()){
+                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
                         $article->setIsFreeContent(false);
                         $chouineur = $crawler->filter('.whines')->filter('p')->text();
                         $article->setChouineurs(intval($chouineur));
-                    }  
+                    }
                 }
 
                 dump('nouvel article');
@@ -94,7 +187,7 @@ class PopulateController extends AbstractController
                 $em->flush();
                 ++$a;
             }
-           
+
             if ($i == $parPage - 1) {
                 ++$page;
                 $json = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?page='.$page.'&per_page='.$parPage);
