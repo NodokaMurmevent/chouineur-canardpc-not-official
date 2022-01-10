@@ -49,7 +49,17 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+
+    public function countArticleWithChouineurs()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->where('a.chouineurs > 0 ')     
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
       public function findAllId()
       {
           return $this
@@ -67,6 +77,15 @@ class ArticleRepository extends ServiceEntityRepository
           
       }
       
+
+      public function findRecentArticleWithChouineurs(\DateTime $date)
+      {
+       
+        $em = $this->getEntityManager();
+          return $em->createQuery("SELECT a FROM App\Entity\Article a WHERE a.realCreatedAt >= :fromTo AND a.chouineurs > 0 ORDER BY a.updatedAt ASC ")
+          ->setParameter('fromTo', $date)->setMaxResults(10)->getResult();
+          
+      }
     /*
     public function findOneBySomeField($value): ?Article
     {

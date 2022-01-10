@@ -61,6 +61,9 @@ class Article
     #[ORM\Column(type: 'datetime_immutable')]
     private $realCreatedAt;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $lastCheckedAt;
+
     public function getId()
     {
         return $this->id;
@@ -209,6 +212,18 @@ class Article
     public function setRealCreatedAt(\DateTimeImmutable $realCreatedAt): self
     {
         $this->realCreatedAt = $realCreatedAt;
+
+        return $this;
+    }
+
+    public function getLastCheckedAt(): ?\DateTimeImmutable
+    {
+        return $this->lastCheckedAt;
+    }
+
+    public function setLastCheckedAt(?\DateTimeImmutable $lastCheckedAt): self
+    {
+        $this->lastCheckedAt = $lastCheckedAt;
 
         return $this;
     }

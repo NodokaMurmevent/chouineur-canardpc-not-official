@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Panther\Client;
-
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -21,63 +22,50 @@ class IndexController extends AbstractController
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
             "articlesRandom" => $articleRepository->findRandomArticle(),
-            // "articlesRandom" => $articleRepository->findRandomArticle(),
+       
             "articlesChouineur" => $articleRepository->findByChouineurs(),
             // "articlesPremium" => $articleRepository->findBy(["isFreeContent" => false]),
             "articlesFree" => $articleRepository->findBy(["isFreeContent" => true]),
             "totalError" => $articleRepository->count(["is404" => true]),
             "totalManquant" => $articleRepository->count(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null]),
             "totalArticles" => $articleRepository->count([]),
+            "totalArticlesWithChouineurs" => $articleRepository->countArticleWithChouineurs(),
             
         ]);
     }
 
-    #[Route('/scrapping/{page}', name: 'scrapping')]
-    public function scrapping($page = 1 ): Response
+    #[Route('/updating-ten-recent/{token}', name: 'updating_ten_recent')]
+    public function scrapping(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null )
     {
+        
+        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
+        $date = new \DateTime("now");
+        $date->modify('-3 month');
+        // dump($date);
+        $articles = $articleRepository->findRecentArticleWithChouineurs($date);
+        // dump($articles);
         $client = Client::createChromeClient();
-        $cache = new FilesystemAdapter();
+        foreach ($articles as $key => $article) {
+            $article->setlastCheckedAt(new \DateTimeImmutable("now"));
+            $crawler = $client->request('GET', $article->getLink());
 
-        $json = file_get_contents("https://www.canardpc.com/wp-json/wp/v2/posts?page=".$page);
-        $header = get_headers("https://www.canardpc.com/wp-json/wp/v2/posts?page=".$page,true);
-
-        $jsonData = json_decode($json, true);
-
-        $articles = [];
-        foreach ($jsonData as $key => $v) {           
-            $id = $v["id"];
-            $chouineurCache = $cache->getItem('articles.'.$id);
-
-            if (!$chouineurCache->isHit()) {
-
-                $crawler = $client->request('GET', $v["link"]);
-            
-                $chouineur = $crawler->filter('.whines')->filter("p")->text();
-               
-                $articles[$id]["link"]= $v["link"];
-                $articles[$id]["title"]= $v["title"]["rendered"];
-                $articles[$id]["nombre"]=42;//intval($chouineur);
-                $articles[$id]["excerpt"]=$v["excerpt"]["rendered"];
-
-                $chouineurCache->set($articles[$id]);
-                $cache->save($chouineurCache); 
+            if ($crawler->filter('.error-404')->count() > 0) {
+                $article->setIs404(true);           
+         
+            } elseif ($access = $crawler->filter('.post-access')) {
+                if ('Accessible à tout le monde' == $access->text()) {
+                    $article->setIsFreeContent(true);
+                } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
+                    $article->setIsFreeContent(false);
+                    $chouineur = $crawler->filter('.whines')->filter('p')->text();
+                    $article->setChouineurs(intval($chouineur));
+                }
             }
-            $articles[$id] = $chouineurCache->get();
-
-            
-
-        } 
-        // $cache->deleteItem('articles');
-        dump($json);
-        dump($articles);
+            $em->persist($article);
+            // dump($article);
+            $em->flush();   
+        }   
         // exit();
-
-        return $this->render('index/index.html.twig', [
-            'controller_name' => 'IndexController',
-            "articles" => $articles,
-            "pages" => $header["X-WP-TotalPages"],
-            "total" => $header["X-WP-Total"],
-            "page" => $page
-        ]);
+        return new Response('success'); 
     }
 }
