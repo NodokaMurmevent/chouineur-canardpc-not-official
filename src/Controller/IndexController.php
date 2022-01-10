@@ -7,10 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Panther\Client;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
 
 class IndexController extends AbstractController
 {
@@ -41,23 +40,28 @@ class IndexController extends AbstractController
         if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
         $date = new \DateTime("now");
         $date->modify('-3 month');
-        // dump($date);
+        // dumps($date);
         $articles = $articleRepository->findRecentArticleWithChouineurs($date);
         // dump($articles);
-        $client = Client::createChromeClient();
+       
+        $browser = new HttpBrowser(HttpClient::create());
+
+
         foreach ($articles as $key => $article) {
             $article->setlastCheckedAt(new \DateTimeImmutable("now"));
             try {
-                sleep(2);
-                $crawler = $client->request('GET', $article->getLink());
+                sleep(1);           
+                    
+                $crawler = $browser->request('GET', $article->getLink());        
                 $errorGet = false;
+
             } catch (\Throwable $th) {
                 //throw $th;
                 $errorGet = true;
             }
            
-            if (!$errorGet) {              
-
+            if (!$errorGet) {        
+              
                 if ($crawler->filter('.error-404')->count() > 0) {
                     $article->setIs404(true);
                 } elseif ($access = $crawler->filter('.post-access')) {
@@ -66,6 +70,7 @@ class IndexController extends AbstractController
                     } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
                         $article->setIsFreeContent(false);
                         $chouineur = $crawler->filter('.whines')->filter('p')->text();
+                        // dump($chouineur);
                         $article->setChouineurs(intval($chouineur));
                     }
                 }
