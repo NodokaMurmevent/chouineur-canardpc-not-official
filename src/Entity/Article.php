@@ -46,8 +46,8 @@ class Article
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private $isFreeContent;
 
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private $is404 = false;
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    private $is404;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private $imageUrl;

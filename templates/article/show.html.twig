@@ -5,6 +5,9 @@
 {% block body %}
     <h1>Article</h1>
 
+<pre>
+    {{ dump(article) }}
+</pre>
     <table class="table">
         <tbody>
             <tr>
@@ -38,10 +41,6 @@
             <tr>
                 <th>UpdatedAt</th>
                 <td>{{ article.updatedAt ? article.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>ModifiedAt</th>
-                <td>{{ article.modifiedAt ? article.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
                 <th>IsFreeContent</th>
