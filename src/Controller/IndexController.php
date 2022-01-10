@@ -47,23 +47,32 @@ class IndexController extends AbstractController
         $client = Client::createChromeClient();
         foreach ($articles as $key => $article) {
             $article->setlastCheckedAt(new \DateTimeImmutable("now"));
-            $crawler = $client->request('GET', $article->getLink());
-
-            if ($crawler->filter('.error-404')->count() > 0) {
-                $article->setIs404(true);           
-         
-            } elseif ($access = $crawler->filter('.post-access')) {
-                if ('Accessible à tout le monde' == $access->text()) {
-                    $article->setIsFreeContent(true);
-                } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
-                    $article->setIsFreeContent(false);
-                    $chouineur = $crawler->filter('.whines')->filter('p')->text();
-                    $article->setChouineurs(intval($chouineur));
-                }
+            try {
+                sleep(2);
+                $crawler = $client->request('GET', $article->getLink());
+                $errorGet = false;
+            } catch (\Throwable $th) {
+                //throw $th;
+                $errorGet = true;
             }
-            $em->persist($article);
-            // dump($article);
-            $em->flush();   
+           
+            if (!$errorGet) {              
+
+                if ($crawler->filter('.error-404')->count() > 0) {
+                    $article->setIs404(true);
+                } elseif ($access = $crawler->filter('.post-access')) {
+                    if ('Accessible à tout le monde' == $access->text()) {
+                        $article->setIsFreeContent(true);
+                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
+                        $article->setIsFreeContent(false);
+                        $chouineur = $crawler->filter('.whines')->filter('p')->text();
+                        $article->setChouineurs(intval($chouineur));
+                    }
+                }
+                $em->persist($article);
+                // dump($article);
+                $em->flush();
+            }  
         }   
         // exit();
         return new Response('success'); 
