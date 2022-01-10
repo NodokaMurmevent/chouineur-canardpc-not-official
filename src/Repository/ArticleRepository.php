@@ -86,6 +86,16 @@ class ArticleRepository extends ServiceEntityRepository
           ->setParameter('fromTo', $date)->setMaxResults(10)->getResult();
           
       }
+
+      public function findLastArticleWithChouineurs()
+      {
+       
+        $em = $this->getEntityManager();
+          return $em->createQuery("SELECT a FROM App\Entity\Article a WHERE a.chouineurs > 0 ORDER BY a.updatedAt ASC ")
+          ->setMaxResults(10)->getResult();
+          
+      }
+
     /*
     public function findOneBySomeField($value): ?Article
     {

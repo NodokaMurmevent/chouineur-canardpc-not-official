@@ -41,7 +41,7 @@ class IndexController extends AbstractController
         $date = new \DateTime("now");
         $date->modify('-3 month');
         // dumps($date);
-        $articles = $articleRepository->findRecentArticleWithChouineurs($date);
+        $articles = $articleRepository->findLastArticleWithChouineurs();
         // dump($articles);
        
         $browser = new HttpBrowser(HttpClient::create());
