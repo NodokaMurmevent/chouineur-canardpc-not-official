@@ -18,11 +18,11 @@ class IndexController extends AbstractController
     {
           
         
-        $ids = array_rand(array_column($articleRepository->findAllId(),"id"),4);
-
+        // $ids = array_rand(array_column($articleRepository->findAllId(),"id"),4);
+// dump($articleRepository->findAllId());
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
-            "articlesRandom" => $articleRepository->findRandomArticle($ids),
+            "articlesRandom" => $articleRepository->findRandomArticle(),
             // "articlesRandom" => $articleRepository->findRandomArticle(),
             "articlesChouineur" => $articleRepository->findByChouineurs(),
             // "articlesPremium" => $articleRepository->findBy(["isFreeContent" => false]),

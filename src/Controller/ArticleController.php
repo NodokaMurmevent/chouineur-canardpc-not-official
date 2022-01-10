@@ -15,10 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     #[Route('/', name: 'article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
+    public function index(Request $request,ArticleRepository $articleRepository): Response
     {
+
+        $articles = $articleRepository->findByPage(
+            $request->query->getInt('page', 1),
+            20
+        );
         return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articles,
+            'total' => $articleRepository->count([]),
         ]);
     }
 

@@ -1,53 +1,65 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Article index
+{% endblock %}
 
 {% block body %}
-    <h1>Article index</h1>
+	<h1 class="text-slate-100">Article index</h1>
+	<p class="text-slate-100">
+		total :
+		{{total}}</p>
+	<div class="px-4 mx-auto max-w-8xl sm:px-6 lg:px-8">
+		<div class="flex flex-col">
+			<div class="overflow-hidden shadow sm:rounded-lg">
+				<div class="min-w-full overflow-x-auto align-middle bg-white">
+					<div class="flex justify-between m-2">
+						<div>
+							<a data-turbo="false" data-no-swup class="inline-flex items-center px-3 py-2 mb-1 mr-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" href="{{ path('article_new') }}">{{ 'admin.entity.new' | trans }}</a>
+						</div>
+					</div>
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-100">
+							<tr class="text-center">								
+								<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-gray-500 uppercase whitespace-nowrap">Title</th>
+								<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-gray-500 uppercase whitespace-nowrap">Guid</th>
+								<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-gray-500 uppercase whitespace-nowrap">Chouineurs</th>
+								<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-gray-500 uppercase whitespace-nowrap">realCreatedAt</th>
+								<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-gray-500 uppercase whitespace-nowrap">realUpdatedAt</th>
+								<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-gray-500 uppercase whitespace-nowrap">ImageUrl</th>
+    							<th scope="col" class="relative px-6 py-3"><span class="sr-only">{{ 'admin.entity.actions' | trans }}</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for article in articles %}
+								<tr class ="{% if article.is404 %} bg-red-200 {% elseif article.isFreeContent %} bg-sky-200 {% endif %}">								
+									<td class="px-4 py-2 text-sm text-center text-gray-500 whitespace-nowrap">
+										<a href="{{ article.link }}" class="underline decoration-sky-400 underline-offset-4" target="_blank" rel="noopener noreferrer">{{ article.title | raw}}</a>
+									</td>
 
-    <table class="text-slate-100">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>               
-               
-                <th>Guid</th>
-                <th>Chouineurs</th>
-                <th>realCreatedAt</th>
-                <th>realUpdatedAt</th>
-                <th>IsFreeContent</th>
-                <th>Is404</th>
-                <th>ImageUrl</th>
-                <th>ImageALaUne</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td> <a href="{{ article.link }}" class="underline decoration-sky-400 underline-offset-4" target="_blank" rel="noopener noreferrer">{{ article.title | raw}}</a></td>                
-                
-                <td>{{ article.guid }}</td>
-                <td>{{ article.chouineurs }}</td>
-                <td>{{ article.realCreatedAt ? article.realCreatedAt|date('Y-m-d') : '' }}</td>
-                <td>{{ article.realUpdatedAt ? article.realUpdatedAt|date('Y-m-d') : '' }}</td>
-                <td>{{ article.isFreeContent ? 'Yes' : 'No' }}</td>
-                <td>{{ article.is404 ? 'Yes' : 'No' }}</td>
-                <td>{{ article.imageUrl }}</td>
-                <td>{{ article.imageALaUne }}</td>
-                <td>
-                    <a href="{{ path('article_show', {'id': article.id}) }}">show</a>
-                    <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="14">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('article_new') }}">Create new</a>
+									<td class="px-4 py-2 text-sm text-center text-gray-500 whitespace-nowrap">{{ article.guid }}</td>
+									<td class="px-4 py-2 text-sm text-center text-gray-500 whitespace-nowrap">{{ article.chouineurs }}</td>
+									<td class="px-4 py-2 text-sm text-center text-gray-500 whitespace-nowrap">{{ article.realCreatedAt ? article.realCreatedAt|date('Y-m-d') : '' }}</td>
+									<td class="px-4 py-2 text-sm text-center text-gray-500 whitespace-nowrap">{{ article.realUpdatedAt ? article.realUpdatedAt|date('Y-m-d') : '' }}</td>
+									<td class="px-4 py-2 text-sm text-center text-gray-500 whitespace-nowrap">
+                                    {{ article.imageUrl ? ("<a class='underline decoration-sky-400 underline-offset-4' href="~ article.imageUrl ~" target='_blank'>"~ article.imageALaUne ~"</a>")| raw : 'non'  }}
+                                    </td>
+									<td class="px-4 py-2 ">
+										<div class="flex items-start justify-center gap-2 text-1xl">
+											<a href="{{ path('article_show', {'id': article.id}) }}">show</a>
+											<a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
+										</td>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="9">{{ 'admin.entity.noRecords' | trans }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					{{ pagination(articles, 'page') }}
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

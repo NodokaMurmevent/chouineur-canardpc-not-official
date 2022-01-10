@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -57,10 +60,10 @@ class ArticleRepository extends ServiceEntityRepository
       }
 
         
-      public function findRandomArticle($ids)
+      public function findRandomArticle()
       {
         $em = $this->getEntityManager();
-          return $em->createQuery("SELECT a FROM App\Entity\Article a WHERE a.id IN (:ids) ")->setParameter('ids',$ids)->getResult();
+          return $em->createQuery("SELECT a FROM App\Entity\Article a ORDER BY Rand() ")->setMaxResults(4)->getResult();
           
       }
       
@@ -75,4 +78,24 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByPage($page = 1, $max = 10)
+    {
+        $dql = $this->createQueryBuilder('p');
+        $dql->orderBy('p.updatedAt', Criteria::DESC);
+
+        $firstResult = ($page - 1) * $max;
+
+        $query = $dql->getQuery();
+        $query->setFirstResult($firstResult);
+        $query->setMaxResults($max);
+
+        $paginator = new Paginator($query);
+
+        if(($paginator->count() <=  $firstResult) && $page != 1) {
+            throw new NotFoundHttpException('Page not found');
+        }
+
+        return $paginator;
+    }
 }

@@ -23,9 +23,11 @@ Si vous vous amusez à DDOS le site de CPC ça vas pas le faire !
     B. faites `yarn install` dans le dossier cloné (peut etre remplacé par npm mais demerdez vous :D )
     C. faites `yarn build` dans le dossier cloné (peut etre remplacé par npm mais demerdez vous :D )
 4. lancez le server local de dev symfony : `symfony server:start`
-5. `symfony console doctrine:database:create`
-6. `symfony console doctrine:schema:update`
-7. vous avez un serveur de dev qui fonctionne ici : https://127.0.0.1:8000/
+5. Du à une dépendance à la fontionc doctrine RAND() ça necessite obligatoirement une base de donnée MysqlDB/MariaDB
+    A. Sinon vous avez qu‘à virer findRandomArticle() et tout ce qui y est lié.
+6. `symfony console doctrine:database:create`
+7. `symfony console doctrine:schema:update`
+8. vous avez un serveur de dev qui fonctionne ici : https://127.0.0.1:8000/
 
 
 ### TODO : 
