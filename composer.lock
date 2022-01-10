@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e66ef64bdcdef56622c7a00f64b0e91a",
+    "content-hash": "3d7f93184f42cb066f5af3775921523e",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -1468,38 +1468,39 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "2.2.3",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "5e7bdbbfe9811c06e1f745d1c166647d5c47d6ee"
+                "reference": "f8af155c1e7963f3d2b4415097d55757bbaa53d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/5e7bdbbfe9811c06e1f745d1c166647d5c47d6ee",
-                "reference": "5e7bdbbfe9811c06e1f745d1c166647d5c47d6ee",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/f8af155c1e7963f3d2b4415097d55757bbaa53d8",
+                "reference": "f8af155c1e7963f3d2b4415097d55757bbaa53d8",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "^1.0",
                 "doctrine/cache": "^1.11 || ^2.0",
                 "doctrine/collections": "^1.0",
                 "doctrine/deprecations": "^0.5.3",
                 "doctrine/event-manager": "^1.0",
                 "php": "^7.1 || ^8.0",
-                "psr/cache": "^1.0|^2.0|^3.0"
+                "psr/cache": "^1.0 || ^2.0 || ^3.0"
             },
             "conflict": {
+                "doctrine/annotations": "<1.0 || >=2.0",
                 "doctrine/common": "<2.10@dev"
             },
             "require-dev": {
                 "composer/package-versions-deprecated": "^1.11",
+                "doctrine/annotations": "^1.0",
                 "doctrine/coding-standard": "^6.0 || ^9.0",
                 "doctrine/common": "^3.0",
-                "phpstan/phpstan": "0.12.84",
+                "phpstan/phpstan": "1.2.0",
                 "phpunit/phpunit": "^7.5.20 || ^8.0 || ^9.0",
-                "symfony/cache": "^4.4|^5.0",
-                "vimeo/psalm": "4.7.0"
+                "symfony/cache": "^4.4 || ^5.0 || ^6.0",
+                "vimeo/psalm": "4.13.1"
             },
             "type": "library",
             "autoload": {
@@ -1549,9 +1550,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/persistence/issues",
-                "source": "https://github.com/doctrine/persistence/tree/2.2.3"
+                "source": "https://github.com/doctrine/persistence/tree/2.3.0"
             },
-            "time": "2021-10-25T19:59:10+00:00"
+            "time": "2022-01-09T19:58:46+00:00"
         },
         {
             "name": "doctrine/sql-formatter",
@@ -2951,6 +2952,32 @@
                 "source": "https://github.com/stof/StofDoctrineExtensionsBundle/tree/v1.7.0"
             },
             "time": "2021-11-22T15:17:44+00:00"
+        },
+        {
+            "name": "symfony/apache-pack",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/apache-pack.git",
+                "reference": "3aa5818d73ad2551281fc58a75afd9ca82622e6c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/apache-pack/zipball/3aa5818d73ad2551281fc58a75afd9ca82622e6c",
+                "reference": "3aa5818d73ad2551281fc58a75afd9ca82622e6c",
+                "shasum": ""
+            },
+            "type": "symfony-pack",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A pack for Apache support in Symfony",
+            "support": {
+                "issues": "https://github.com/symfony/apache-pack/issues",
+                "source": "https://github.com/symfony/apache-pack/tree/master"
+            },
+            "time": "2017-12-12T01:46:35+00:00"
         },
         {
             "name": "symfony/asset",

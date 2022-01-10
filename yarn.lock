@@ -2589,9 +2589,9 @@ find-up@^4.0.0:
     path-exists "^4.0.0"
 
 follow-redirects@^1.0.0:
-  version "1.14.6"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.6.tgz#8cfb281bbc035b3c067d6cd975b0f6ade6e855cd"
-  integrity sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==
+  version "1.14.7"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
+  integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
 
 forwarded@0.2.0:
   version "0.2.0"
@@ -3370,10 +3370,10 @@ next-tick@~1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
-node-forge@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
-  integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
+node-forge@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-1.2.0.tgz#850cec9230f62f9a7cd8ddd08dc74b4be52573ad"
+  integrity sha512-M4AsdaP0bGNaSPtatd/+f76asocI0cFaURRdeQVZvrJBrYp2Qohv5hDbGHykuNqCb1BYjWHjdS6HlN50qbztwA==
 
 node-notifier@^9.0.0:
   version "9.0.1"
@@ -4274,11 +4274,11 @@ select-hose@^2.0.0:
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
 selfsigned@^1.10.11:
-  version "1.10.11"
-  resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.11.tgz#24929cd906fe0f44b6d01fb23999a739537acbe9"
-  integrity sha512-aVmbPOfViZqOZPgRBT0+3u4yZFHpmnIghLMlAcb5/xhp5ZtB/RVnKhz5vl2M32CLXAqR4kha9zfhNg0Lf/sxKA==
+  version "1.10.13"
+  resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.13.tgz#763e091c684cbcbe98aa40b15b01da3716d68a12"
+  integrity sha512-UmLwTKZwNmXYDAlRFhaEdgEg0dp9k5gfJXuO7uKvSqioN1M0+Mgf4V39IlVZMSuqGoCi6h5legkhNXvWy0rFSg==
   dependencies:
-    node-forge "^0.10.0"
+    node-forge "^1.2.0"
 
 semver@7.0.0:
   version "7.0.0"
