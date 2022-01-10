@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/admin')]
 class PopulateController extends AbstractController
 {
     #[Route('/articles/get-news-articles', name: 'article_get_news_articles')]
