@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article{% endblock %}
+
+{% block body %}
+    <h1>Article</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ article.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ article.title }}</td>
+            </tr>
+            <tr>
+                <th>Excerpt</th>
+                <td>{{ article.excerpt }}</td>
+            </tr>
+            <tr>
+                <th>Link</th>
+                <td>{{ article.link }}</td>
+            </tr>
+            <tr>
+                <th>Guid</th>
+                <td>{{ article.guid }}</td>
+            </tr>
+            <tr>
+                <th>Chouineurs</th>
+                <td>{{ article.chouineurs }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ article.updatedAt ? article.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ModifiedAt</th>
+                <td>{{ article.modifiedAt ? article.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsFreeContent</th>
+                <td>{{ article.isFreeContent ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Is404</th>
+                <td>{{ article.is404 ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>ImageUrl</th>
+                <td>{{ article.imageUrl }}</td>
+            </tr>
+            <tr>
+                <th>ImageALaUne</th>
+                <td>{{ article.imageALaUne }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('article_index') }}">back to list</a>
+
+    <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
+
+    {{ include('article/_delete_form.html.twig') }}
+{% endblock %}

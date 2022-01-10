@@ -3,53 +3,65 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type:"uuid_binary_ordered_time", unique:true)]
+    #[ORM\GeneratedValue(strategy:"CUSTOM")]
+    #[ORM\CustomIdGenerator(class:"Ramsey\Uuid\Doctrine\UuidOrderedTimeGenerator")]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private $title;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private $excerpt;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private $link;
 
-    #[ORM\Column(type: 'string', length: 255,unique:true)]
+    #[ORM\Column(type: Types::STRING, length: 255,unique:true)]
     private $guid;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private $chouineurs;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on:"create")]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on:"update")]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private $updatedAt;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private $modifiedAt;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Gedmo\Timestampable(on: 'change', field: ['title', 'excerpt'])]
+    private $contentChangedAt;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private $isFreeContent;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private $is404 = false;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private $imageUrl;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private $imageALaUne;
 
-    public function getId(): ?int
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $realUpdatedAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $realCreatedAt;
+
+    public function getId()
     {
         return $this->id;
     }
@@ -119,35 +131,14 @@ class Article
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    public function getContentChangedAt(): ?\DateTimeImmutable
     {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getModifiedAt(): ?\DateTimeImmutable
-    {
-        return $this->modifiedAt;
-    }
-
-    public function setModifiedAt(\DateTimeImmutable $modifiedAt): self
-    {
-        $this->modifiedAt = $modifiedAt;
-
-        return $this;
+        return $this->contentChangedAt;
     }
 
     public function getIsFreeContent(): ?bool
@@ -194,6 +185,30 @@ class Article
     public function setImageALaUne(?string $imageALaUne): self
     {
         $this->imageALaUne = $imageALaUne;
+
+        return $this;
+    }
+
+    public function getRealUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->realUpdatedAt;
+    }
+
+    public function setRealUpdatedAt(\DateTimeImmutable $realUpdatedAt): self
+    {
+        $this->realUpdatedAt = $realUpdatedAt;
+
+        return $this;
+    }
+
+    public function getRealCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->realCreatedAt;
+    }
+
+    public function setRealCreatedAt(\DateTimeImmutable $realCreatedAt): self
+    {
+        $this->realCreatedAt = $realCreatedAt;
 
         return $this;
     }

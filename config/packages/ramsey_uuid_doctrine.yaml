@@ -1,0 +1,4 @@
+doctrine:
+    dbal:
+        types:
+            uuid_binary_ordered_time: Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType

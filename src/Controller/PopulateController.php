@@ -32,9 +32,8 @@ class PopulateController extends AbstractController
             $article->setGuid($value['id']);
             $article->setLink($value['link']);
 
-            $article->setCreatedAt(new \DateTimeImmutable($value['date_gmt']));
-            $article->setModifiedAt(new \DateTimeImmutable($value['modified_gmt']));
-            $article->setUpdatedAt(new \DateTimeImmutable('now')); 
+            $article->setRealCreatedAt(new \DateTimeImmutable($value['date_gmt']));
+            $article->setRealUpdatedAt(new \DateTimeImmutable($value['modified_gmt']));
 
             if ('' !== $value['featured_media']) {
                 $article->setImageALaUne($value['featured_media']);
@@ -65,7 +64,7 @@ class PopulateController extends AbstractController
     {
         $offset = $articleRepository->count([]);
         dump($offset);
-        $jsonData = json_decode(file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?offset='.$offset.'&order=asc&per_page=200'),true);
+        $jsonData = json_decode(file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?offset='.$offset.'&order=asc&per_page=100'),true);
 
         foreach ($jsonData as $value) {
             $article = new Article();           
@@ -75,9 +74,8 @@ class PopulateController extends AbstractController
             $article->setGuid($value['id']);
             $article->setLink($value['link']);
 
-            $article->setCreatedAt(new \DateTimeImmutable($value['date_gmt']));
-            $article->setModifiedAt(new \DateTimeImmutable($value['modified_gmt']));
-            $article->setUpdatedAt(new \DateTimeImmutable('now')); 
+            $article->setRealCreatedAt(new \DateTimeImmutable($value['date_gmt']));
+            $article->setRealUpdatedAt(new \DateTimeImmutable($value['modified_gmt']));
 
             if ('' !== $value['featured_media']) {
                 $article->setImageALaUne($value['featured_media']);
@@ -127,11 +125,12 @@ class PopulateController extends AbstractController
             if ($article) {
                 if (
                         (!$article->getIs404()) &&
-                        ($article->getUpdatedAt() < $jsonData[$i]['modified_gmt']) &&
+                        ($article->geRealUpdatedAt() < $jsonData[$i]['modified_gmt']) &&
                         (!$article->getIsFreeContent())
                     ) {
-                    $article->setModifiedAt(new \DateTimeImmutable($jsonData[$i]['modified_gmt']));
-                    $article->setUpdatedAt(new \DateTimeImmutable('now'));
+                       
+                    $article->setRealUpdatedAt(new \DateTimeImmutable($jsonData[$i]['modified_gmt']));
+
                     $crawler = $client->request('GET', $jsonData[$i]['link']);
                     $chouineur = $crawler->filter('.whines')->filter('p')->text();
                     $article->setChouineurs(intval($chouineur));
@@ -161,9 +160,8 @@ class PopulateController extends AbstractController
                     }
                 }
                 $article->setTitle(strip_tags($jsonData[$i]['title']['rendered']));
-                $article->setCreatedAt(new \DateTimeImmutable($jsonData[$i]['date_gmt']));
-                $article->setModifiedAt(new \DateTimeImmutable($jsonData[$i]['modified_gmt']));
-                $article->setUpdatedAt(new \DateTimeImmutable('now'));
+                $article->setRealCreatedAt(new \DateTimeImmutable($jsonData[$i]['date_gmt']));
+                $article->setRealUpdatedAt(new \DateTimeImmutable($jsonData[$i]['modified_gmt']));
                 $crawler = $client->request('GET', $article->getLink());
 
                 if ($crawler->filter('.error-404')->count() > 0) {
