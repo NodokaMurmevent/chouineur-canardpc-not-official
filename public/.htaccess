@@ -87,21 +87,6 @@ DirectoryIndex index.php
 </IfModule>
 
 # ----------------------------------------------------------------------
-# block hotlink
-# ----------------------------------------------------------------------
-RewriteEngine on
-RewriteCond %{HTTP_REFERER} !^$
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?relancecevennes.fr [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?relance-cevennes.fr [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?google.com [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?bing.com [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yahoo.com [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?qwant.com [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?duckduckgo.com [NC]
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?startpage.com [NC]
-RewriteRule \.(jpg|jpeg|png|gif|svg)$ https://relancecevennes.fr/build/img/250x200.jpeg [NC,R,L]
-
-# ----------------------------------------------------------------------
 # Cache Control via HTTP Headers + Expires
 # Generation of Expires and Cache-Control HTTP headers according to user-specified criteria
 # http://httpd.apache.org/docs/2.0/mod/mod_headers.html
