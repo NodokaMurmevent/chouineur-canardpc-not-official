@@ -96,7 +96,11 @@ class ArticleRepository extends ServiceEntityRepository
           
       }
 
-      public function findWeeklyArticles(\DateTime $date){
+    /**
+     * @return Article[] Returns an array of Article objects
+     */
+      public function findWeeklyArticles(\DateTime $date)
+      {
         return $this->createQueryBuilder('a')
         ->select('a')
         ->where('a.realCreatedAt >= :date')     

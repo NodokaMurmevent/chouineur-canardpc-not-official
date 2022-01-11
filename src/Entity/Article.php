@@ -6,6 +6,7 @@ use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -63,6 +64,10 @@ class Article
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $lastCheckedAt;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $localImage;
+
 
     public function getId()
     {
@@ -227,4 +232,17 @@ class Article
 
         return $this;
     }
+
+    public function getLocalImage(): ?string
+    {
+        return $this->localImage;
+    }
+
+    public function setLocalImage(?string $localImage): self
+    {
+        $this->localImage = $localImage;
+
+        return $this;
+    }
+
 }
