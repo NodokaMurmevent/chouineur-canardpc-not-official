@@ -7,16 +7,17 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Panther\Client;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-#[Route('/admin')]
 class PopulateController extends AbstractController
 {
-    #[Route('/articles/get-news-articles', name: 'article_get_news_articles')]
-    public function articleFetch(EntityManagerInterface $em, ArticleRepository $articleRepository)
+    #[Route('/get-news-articles/{token}', name: 'article_get_news_articles')]
+    public function articleFetch(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null)
     {
-
+        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
         $page = 1;
         $parPage = 100;
 
@@ -65,9 +66,12 @@ class PopulateController extends AbstractController
     }
 
 
-    #[Route('/articles/populate-from-start', name: 'populate_from_start')]
-    public function populate(EntityManagerInterface $em, ArticleRepository $articleRepository): Response
+    #[Route('/populate-from-start/{token}', name: 'populate_from_start')]
+    public function populate(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null): Response
     {
+
+        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
+
         $offset = $articleRepository->count([]);
     
         $jsonData = json_decode(file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?offset='.$offset.'&order=asc&per_page=100'),true);
@@ -109,39 +113,102 @@ class PopulateController extends AbstractController
     }
 
 
-    #[Route('/articles/populate-not-set-articles', name: 'populate_articles')]
-    public function index(EntityManagerInterface $em, ArticleRepository $articleRepository): Response
+    #[Route('/updating-never-set-articles/{token}', name: 'updating_never_set_articles')]
+    public function index(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null): Response
     {
         
-
+        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
+        
         $articles = $articleRepository->findBy(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null],["realCreatedAt"=>"DESC"],40);
 
-        $client = Client::createChromeClient();
-       
+        $browser = new HttpBrowser(HttpClient::create());       
 
         foreach ($articles as $key => $article) {
-            $crawler = $client->request('GET', $article->getLink());
+            $article->setlastCheckedAt(new \DateTimeImmutable("now"));
+            try {
+                usleep(500000);           
+                    
+                $crawler = $browser->request('GET', $article->getLink());        
+                $errorGet = false;
 
-            if ($crawler->filter('.error-404')->count() > 0) {
-                $article->setIs404(true);           
-         
-            } elseif ($access = $crawler->filter('.post-access')) {
-                if ('Accessible à tout le monde' == $access->text()) {
-                    $article->setIsFreeContent(true);
-                } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
-                    $article->setIsFreeContent(false);
-                    $chouineur = $crawler->filter('.whines')->filter('p')->text();
-                    $article->setChouineurs(intval($chouineur));
-                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                $errorGet = true;
             }
-            $em->persist($article);
-            $em->flush();   
-        }       
-             
-        dump($articleRepository->count(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null]));
-        exit();
-        return $this->render('populate/populate-articles.html.twig', [
-            'articles' => $articles,
-        ]);
+           
+            if (!$errorGet) {        
+              
+                if ($crawler->filter('.error-404')->count() > 0) {
+                    $article->setIs404(true);
+                } elseif ($access = $crawler->filter('.post-access')) {
+                    if ('Accessible à tout le monde' == $access->text()) {
+                        $article->setIsFreeContent(true);
+                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
+                        $article->setIsFreeContent(false);
+                        $chouineur = $crawler->filter('.whines')->filter('p')->text();
+                        // dump($chouineur);
+                        $article->setChouineurs(intval($chouineur));
+                    }
+                }
+                $em->persist($article);
+                // dump($article);
+                $em->flush();
+            }  
+        }          
+        // dump($articles);
+        // dump($articleRepository->count(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null]));
+        // exit();
+        return new Response('success'); 
+    }
+
+
+    #[Route('/updating-ten-recent/{token}', name: 'updating_ten_recent')]
+    public function scrapping(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null )
+    {
+        
+        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
+        $date = new \DateTime("now");
+        $date->modify('-3 month');
+        // dumps($date);
+        $articles = $articleRepository->findLastArticleWithChouineurs();
+        // dump($articles);
+       
+        $browser = new HttpBrowser(HttpClient::create());
+
+
+        foreach ($articles as $key => $article) {
+            $article->setlastCheckedAt(new \DateTimeImmutable("now"));
+            try {
+                sleep(1);           
+                    
+                $crawler = $browser->request('GET', $article->getLink());        
+                $errorGet = false;
+
+            } catch (\Throwable $th) {
+                //throw $th;
+                $errorGet = true;
+            }
+           
+            if (!$errorGet) {        
+              
+                if ($crawler->filter('.error-404')->count() > 0) {
+                    $article->setIs404(true);
+                } elseif ($access = $crawler->filter('.post-access')) {
+                    if ('Accessible à tout le monde' == $access->text()) {
+                        $article->setIsFreeContent(true);
+                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
+                        $article->setIsFreeContent(false);
+                        $chouineur = $crawler->filter('.whines')->filter('p')->text();
+                        // dump($chouineur);
+                        $article->setChouineurs(intval($chouineur));
+                    }
+                }
+                $em->persist($article);
+                // dump($article);
+                $em->flush();
+            }  
+        }   
+        // exit();
+        return new Response('success'); 
     }
 }
