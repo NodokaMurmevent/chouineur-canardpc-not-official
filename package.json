@@ -21,5 +21,11 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@fontsource/barlow-condensed": "^4.5.0",
+        "@fontsource/poppins": "^4.5.0",
+        "@iconify/iconify": "^2.1.0",
+        "@tailwindcss/forms": "^0.4.0",
+        "alpinejs": "^3.7.1"
+    }
 }

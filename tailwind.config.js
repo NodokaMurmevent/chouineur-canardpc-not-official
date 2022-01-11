@@ -5,7 +5,11 @@ module.exports = {
         "./assets/**/*.js",
         "./src/Form/**/*.php"
     ],
-    theme: {       
+    theme: { 
+        fontFamily: {
+            'title': ['"Barlow Condensed"' ],
+            'body': ['"Poppins"' ],
+        },      
         extend: {
             colors: {  
                 primary: "#ffa500",
@@ -15,7 +19,7 @@ module.exports = {
     },
     plugins: [
         // require('@tailwindcss/forms'),
-        // require('@tailwindcss/forms'),
+        require('@tailwindcss/forms'),
         require('@tailwindcss/aspect-ratio'),
         require('@tailwindcss/typography')
     ],
