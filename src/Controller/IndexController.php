@@ -19,49 +19,49 @@ class IndexController extends AbstractController
         $date = new \DateTime();
         $date->setTimestamp(strtotime('Monday this week'));
 
-        $r = $articleRepository->findByChouineurs();
+        // $r = $articleRepository->findByChouineurs();
 
-        foreach ($r as $key => $article) {
-            $url = parse_url($article->getImageUrl());           
-            if (isset($url['host'])) {
+        // foreach ($r as $key => $article) {
+        //     $url = parse_url($article->getImageUrl());           
+        //     if (isset($url['host'])) {
                    
-                $path_parts = pathinfo($url['path']);
-                $folder1 = explode('/', $path_parts['dirname'])['1'];
-                $folder2 = explode('/', $path_parts['dirname'])['2'];
-                $folderComplet = '/'.$folder1.'/'.$folder2;
-                $tempFixturesPath = $this->getParameter('kernel.project_dir').'/var/tmp';
-                // dump($article);
-                try {
-                    $image = file_get_contents($article->getImageUrl());
-                } catch (FileException $e) {
-                    // dump($e);
-                    $image = false;
-                }
-                $imgRaw = imagecreatefromstring($image);
-                imagejpeg($imgRaw, $tempFixturesPath.'/tmp.jpg', 100);
-                imagedestroy($imgRaw);
-                $file = new File($tempFixturesPath.'/tmp.jpg');
+        //         $path_parts = pathinfo($url['path']);
+        //         $folder1 = explode('/', $path_parts['dirname'])['1'];
+        //         $folder2 = explode('/', $path_parts['dirname'])['2'];
+        //         $folderComplet = '/'.$folder1.'/'.$folder2;
+        //         $tempFixturesPath = $this->getParameter('kernel.project_dir').'/var/tmp';
+        //         // dump($article);
+        //         try {
+        //             $image = file_get_contents($article->getImageUrl());
+        //         } catch (FileException $e) {
+        //             // dump($e);
+        //             $image = false;
+        //         }
+        //         $imgRaw = imagecreatefromstring($image);
+        //         imagejpeg($imgRaw, $tempFixturesPath.'/tmp.jpg', 100);
+        //         imagedestroy($imgRaw);
+        //         $file = new File($tempFixturesPath.'/tmp.jpg');
 
-                if ($file) {
-                    $safeFilename = strtolower($slugger->slug($article->getTitle()));
-                    $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+        //         if ($file) {
+        //             $safeFilename = strtolower($slugger->slug($article->getTitle()));
+        //             $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-                    try {
-                        $file->move(
-                            $this->getParameter('articles_directory').$folderComplet,
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        // dump($e);
-                    }
+        //             try {
+        //                 $file->move(
+        //                     $this->getParameter('articles_directory').$folderComplet,
+        //                     $newFilename
+        //                 );
+        //             } catch (FileException $e) {
+        //                 // dump($e);
+        //             }
 
-                    $article->setLocalImage("/uploads/articles".$folderComplet.'/'.$newFilename);
-                    $article->setImageUrl(null);
-                }
-                $em->persist($article);              
-                $em->flush();
-            }
-        }
+        //             $article->setLocalImage("/uploads/articles".$folderComplet.'/'.$newFilename);
+        //             $article->setImageUrl(null);
+        //         }
+        //         $em->persist($article);              
+        //         $em->flush();
+        //     }
+        // }
 
    
 
