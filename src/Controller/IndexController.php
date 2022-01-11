@@ -30,7 +30,7 @@ class IndexController extends AbstractController
                 $folder2 = explode('/', $path_parts['dirname'])['2'];
                 $folderComplet = '/'.$folder1.'/'.$folder2;
                 $tempFixturesPath = $this->getParameter('kernel.project_dir').'/var/tmp';
-                dump($article);
+                // dump($article);
                 try {
                     $image = file_get_contents($article->getImageUrl());
                 } catch (FileException $e) {
