@@ -16,14 +16,14 @@ class IndexController extends AbstractController
     #[Route('/', name: 'index')]
     public function index( ArticleRepository $articleRepository): Response
     {
-
-
+        $date =new \DateTime();
+        $date->setTimestamp(strtotime('Monday this week'));
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
             "articlesRandom" => $articleRepository->findRandomArticle(),
-       
+            "lundi" => $date,
             "articlesChouineur" => $articleRepository->findByChouineurs(),
-            // "articlesPremium" => $articleRepository->findBy(["isFreeContent" => false]),
+            "articlesDerniers" => $articleRepository->findWeeklyArticles($date),
             "articlesFree" => $articleRepository->findBy(["isFreeContent" => true]),
             "totalError" => $articleRepository->count(["is404" => true]),
             "totalManquant" => $articleRepository->count(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null]),

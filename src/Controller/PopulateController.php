@@ -25,8 +25,8 @@ class PopulateController extends AbstractController
         $date = $last->getRealCreatedAt();
         $string = 'https://www.canardpc.com/wp-json/wp/v2/posts?after='.$date->format("Y-m-d\TH:i:s").'&page='.$page.'&per_page='.$parPage.'&order=desc';
         $jsonData = json_decode(file_get_contents($string),true);
-        dump( $string);
-        
+        // dump( $string);
+        $browser = new HttpBrowser(HttpClient::create());       
         foreach ($jsonData as $value) {
             $exist = $articleRepository->findOneByGuid($value['id']);
             if (!$exist) {
@@ -55,14 +55,29 @@ class PopulateController extends AbstractController
                         $article->setImageALaUne(null);              
                     }  
                 }
-                $em->persist($article);   
-            }else{
-                dump($value['id']);
+
+                $crawler = $browser->request('GET', $article->getLink());        
+                if ($crawler->filter('.error-404')->count() > 0) {
+                    $article->setIs404(true);
+                } elseif ($access = $crawler->filter('.post-access')) {
+                    $article->setIs404(false);
+                    if ('Accessible à tout le monde' == $access->text()) {
+                        $article->setIsFreeContent(true);
+                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
+                        $article->setIsFreeContent(false);
+                        $chouineur = $crawler->filter('.whines')->filter('p')->text();                       
+                        $article->setChouineurs(intval($chouineur));
+                        $article->setLastCheckedAt(new \DateTimeImmutable("now"));
+                    }
+                }
+                $em->persist($article); 
+                // dump($article);
             }
                  
         }
         $em->flush();
-        exit();
+        // exit();
+        return new Response('success'); 
     }
 
 

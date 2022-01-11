@@ -96,6 +96,17 @@ class ArticleRepository extends ServiceEntityRepository
           
       }
 
+      public function findWeeklyArticles(\DateTime $date){
+        return $this->createQueryBuilder('a')
+        ->select('a')
+        ->where('a.realCreatedAt >= :date')     
+        ->orderBy("a.realCreatedAt","DESC")
+        ->setParameter('date', $date)
+        ->getQuery()
+        ->getResult()
+    ;
+      }
+
     /*
     public function findOneBySomeField($value): ?Article
     {
