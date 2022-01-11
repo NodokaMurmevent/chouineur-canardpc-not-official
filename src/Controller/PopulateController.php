@@ -226,4 +226,34 @@ class PopulateController extends AbstractController
         // exit();
         return new Response('success'); 
     }
+
+    #[Route('/fix-images', name: 'fix-images')]
+    public function fixImage(EntityManagerInterface $em, ArticleRepository $articleRepository )
+    {
+
+        $var = $articleRepository->findByImageLocalNotNull(["localImage"=>null]);
+        foreach ($var as $key => $article) {
+            $article->getGuid();
+            
+            try {
+                $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$article->getImageALaUne());
+                $imageUrlData = json_decode($imageUrl, true);
+                if ([] != $imageUrlData['media_details']['sizes']) {
+                    $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
+                } else {
+                    $article->setImageALaUne(null);   
+                }
+                $article->setLocalImage(null);
+            } catch (\Throwable $th) {                      
+                $article->setLocalImage(null);             
+            } 
+            $em->persist($article);
+            // dump($article);
+            $em->flush(); 
+        }
+        dump($var);
+        exit();
+        return new Response('success');
+
+    }
 }

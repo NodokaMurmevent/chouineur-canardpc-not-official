@@ -110,7 +110,17 @@ class ArticleRepository extends ServiceEntityRepository
         ->getResult()
     ;
       }
-
+    /**
+     * @return Article[] Returns an array of Article objects
+     */
+      public function findByImageLocalNotNull()
+      {
+        return $this->createQueryBuilder('a')
+        ->andWhere('a.localImage is not null')     
+        ->getQuery()
+        ->getResult()
+    ;
+      }
     /*
     public function findOneBySomeField($value): ?Article
     {
