@@ -25,7 +25,6 @@ class PopulateController extends AbstractController
         $date = $last->getRealCreatedAt();
         $string = 'https://www.canardpc.com/wp-json/wp/v2/posts?after='.$date->format("Y-m-d\TH:i:s").'&page='.$page.'&per_page='.$parPage.'&order=desc';
         $jsonData = json_decode(file_get_contents($string),true);
-        // dump( $string);
         $browser = new HttpBrowser(HttpClient::create());       
         foreach ($jsonData as $value) {
             $exist = $articleRepository->findOneByGuid($value['id']);
@@ -70,62 +69,15 @@ class PopulateController extends AbstractController
                         $article->setLastCheckedAt(new \DateTimeImmutable("now"));
                     }
                 }
-                $em->persist($article); 
-                // dump($article);
+                $em->persist($article);                
             }
                  
         }
-        $em->flush();
-        // exit();
+        $em->flush();       
         return new Response('success'); 
     }
 
 
-    #[Route('/populate-from-start/{token}', name: 'populate_from_start')]
-    public function populate(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null): Response
-    {
-
-        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
-
-        $offset = $articleRepository->count([]);
-    
-        $jsonData = json_decode(file_get_contents('https://www.canardpc.com/wp-json/wp/v2/posts?offset='.$offset.'&order=asc&per_page=100'),true);
-
-        foreach ($jsonData as $value) {
-            $article = new Article();           
-
-            $article->setTitle(strip_tags($value['title']['rendered']));
-            $article->setExcerpt(strip_tags($value['excerpt']['rendered']));
-            $article->setGuid($value['id']);
-            $article->setLink($value['link']);
-
-            $article->setRealCreatedAt(new \DateTimeImmutable($value['date_gmt']));
-            $article->setRealUpdatedAt(new \DateTimeImmutable($value['modified_gmt']));
-
-            if ('' !== $value['featured_media']) {
-                $article->setImageALaUne($value['featured_media']);
-                try {
-                    $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$value['featured_media']);
-                    $imageUrlData = json_decode($imageUrl, true);
-                    if ([] != $imageUrlData['media_details']['sizes']) {
-                        $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
-                    } else {
-                        $article->setImageUrl('https://cdn.canardware.com/'.$imageUrlData['media_details']['file']);
-                    }
-                } catch (\Throwable $th) {
-                    //throw $th;     
-                    $article->setImageALaUne(null);              
-                }  
-            }
-            $em->persist($article); 
-            
-            // dump($article);
-        }
-        $em->flush();  
-        return $this->render('populate/populate-from-start.html.twig', [
-            'offset' => $offset,
-        ]);
-    }
 
 
     #[Route('/updating-never-set-articles/{token}', name: 'updating_never_set_articles')]
@@ -147,7 +99,7 @@ class PopulateController extends AbstractController
                 $errorGet = false;
 
             } catch (\Throwable $th) {
-                //throw $th;
+                
                 $errorGet = true;
             }
            
@@ -160,19 +112,14 @@ class PopulateController extends AbstractController
                         $article->setIsFreeContent(true);
                     } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
                         $article->setIsFreeContent(false);
-                        $chouineur = $crawler->filter('.whines')->filter('p')->text();
-                        // dump($chouineur);
+                        $chouineur = $crawler->filter('.whines')->filter('p')->text();                        
                         $article->setChouineurs(intval($chouineur));
                     }
                 }
-                $em->persist($article);
-                // dump($article);
+                $em->persist($article);               
                 $em->flush();
             }  
-        }          
-        // dump($articles);
-        // dump($articleRepository->count(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null]));
-        // exit();
+        }
         return new Response('success'); 
     }
 
@@ -184,10 +131,9 @@ class PopulateController extends AbstractController
         if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
         $date = new \DateTime("now");
         $date->modify('-3 month');
-        // dumps($date);
+
         $articles = $articleRepository->findLastArticleWithChouineurs();
-        // dump($articles);
-       
+     
         $browser = new HttpBrowser(HttpClient::create());
 
 
@@ -200,7 +146,7 @@ class PopulateController extends AbstractController
                 $errorGet = false;
 
             } catch (\Throwable $th) {
-                //throw $th;
+               
                 $errorGet = true;
             }
            
@@ -214,45 +160,58 @@ class PopulateController extends AbstractController
                     } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
                         $article->setIsFreeContent(false);
                         $chouineur = $crawler->filter('.whines')->filter('p')->text();
-                        // dump($chouineur);
+                        
                         $article->setChouineurs(intval($chouineur));
                     }
                 }
-                $em->persist($article);
-                // dump($article);
+                $em->persist($article);               
                 $em->flush();
             }  
         }   
-        // exit();
+        
         return new Response('success'); 
     }
 
-    #[Route('/fix-images', name: 'fix-images')]
-    public function fixImage(EntityManagerInterface $em, ArticleRepository $articleRepository )
+    #[Route('/checking-weekly-articles/{token}', name: 'checking_weekly_articles')]
+    public function checkingWeeklyArticles(EntityManagerInterface $em, ArticleRepository $articleRepository, $token = null )
     {
 
-        $var = $articleRepository->findByImageLocalNotNull(["localImage"=>null]);
-        foreach ($var as $key => $article) {
-            $article->getGuid();
-            
-            try {
-                $imageUrl = file_get_contents('https://www.canardpc.com/wp-json/wp/v2/media/'.$article->getImageALaUne());
-                $imageUrlData = json_decode($imageUrl, true);
-                if ([] != $imageUrlData['media_details']['sizes']) {
-                    $article->setImageUrl($imageUrlData['media_details']['sizes']['flex-config-product']['source_url']);
-                } else {
-                    $article->setImageALaUne(null);   
+        if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
+        $date = new \DateTime();
+        $date->setTimestamp(strtotime('Monday this week'));
+        $articles = $articleRepository->findWeeklyArticles($date);
+
+        $browser = new HttpBrowser(HttpClient::create());
+
+        foreach ($articles as $key => $article) {
+            $article->setLastCheckedAt(new \DateTimeImmutable("now"));
+            try {             
+                    
+                $crawler = $browser->request('GET', $article->getLink());        
+                $errorGet = false;
+
+            } catch (\Throwable $th) {              
+                $errorGet = true;
+            }
+           
+            if (!$errorGet) {       
+              
+                if ($crawler->filter('.error-404')->count() > 0) {
+                    $article->setIs404(true);
+                } elseif ($access = $crawler->filter('.post-access')) {
+                    if ('Accessible à tout le monde' == $access->text()) {
+                        $article->setIsFreeContent(true);
+                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
+                        $article->setIsFreeContent(false);
+                        $chouineur = $crawler->filter('.whines')->filter('p')->text();                        
+                        $article->setChouineurs(intval($chouineur));
+                    }
                 }
-                $article->setLocalImage(null);
-            } catch (\Throwable $th) {                      
-                $article->setLocalImage(null);             
-            } 
-            $em->persist($article);
-            // dump($article);
-            $em->flush(); 
+              
+                $em->persist($article);
+                $em->flush();
+            }  
         }
-        dump($var);
-        exit();
         return new Response('success');
 
     }
