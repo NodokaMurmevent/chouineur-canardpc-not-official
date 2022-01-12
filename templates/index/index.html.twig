@@ -169,11 +169,8 @@
 							</div>
 							<a href="{{article.link}}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
 							<div class="flex justify-between">
-								<p class="block text-sm font-medium text-slate-400">Il y a
-									{{article.chouineurs}}
-									chouineur
-									{% if article.chouineurs > 1 %}s
-									{% endif %}
+								<p class="block text-sm font-medium text-slate-400">
+									Il y a {{article.chouineurs}} chouineur{% if article.chouineurs > 1 %}s{% endif %}
 								</p>
 								<p class="block text-sm font-medium text-right text-slate-400">Article du
 									{{article.realCreatedAt| format_datetime('short', 'none', locale='fr') }}</p>
