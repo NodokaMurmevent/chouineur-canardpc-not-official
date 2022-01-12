@@ -34,20 +34,31 @@
 		<ul role="list" class="grid grid-cols-1 gap-5 mt-3 sm:gap-6 sm:grid-cols-4">
 			<li class="flex col-span-1 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-green-500 rounded-l-md">
-					<span class="w-8 h-8 text-green-200 iconify" data-icon="fa-solid:sad-cry"></span>
+					<span class="w-8 h-8 text-green-200 iconify" data-icon="pepicons:bookmark-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
 						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">Articles Chouinés</a>
-						<p class="text-gray-500">{{totalArticlesWithChouineurs}}</p>
+						<p class="text-gray-500">{{articlesChouineur | length}}</p>
 					</div>
 				</div>
 			</li>
+
+			<li class="flex col-span-1 rounded-md shadow-sm">
+				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-pink-500 rounded-l-md">
+					<span class="w-8 h-8 text-pink-200 iconify" data-icon="pepicons:megaphone-print"></span>
+				</div>
+				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
+					<div class="flex-1 px-4 py-2 text-sm truncate">
+						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">Total de ouins</a>
+						<p class="text-gray-500">{{nbrsChouineur}}</p>
+					</div>
+				</div>
+			</li>
+
 			<li class="flex col-span-1 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-sky-500 rounded-l-md">
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-sky-200" viewbox="0 0 20 20" fill="currentColor">
-						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-					</svg>
+					<span class="w-8 h-8 text-sky-200 iconify" data-icon="pepicons:info-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
@@ -58,10 +69,20 @@
 			</li>
 
 			<li class="flex col-span-1 rounded-md shadow-sm">
+				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-lime-500 rounded-l-md">
+					<span class="w-8 h-8 text-lime-200 iconify" data-icon="pepicons:trophy-print"></span>
+				</div>
+				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
+					<div class="flex-1 px-4 py-2 text-sm truncate">
+						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">Articles gratuits</a>
+						<p class="text-gray-500">{{articlesFree | length }}</p>
+					</div>
+				</div>
+			</li>
+
+			<li class="flex col-span-1 col-start-2 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-yellow-500 rounded-l-md">
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-200" viewbox="0 0 20 20" fill="currentColor">
-						<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-					</svg>
+					<span class="w-8 h-8 text-yellow-200 iconify" data-icon="pepicons:pinpoint-off-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
@@ -73,14 +94,12 @@
 
 			<li class="flex col-span-1 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-red-500 rounded-l-md">
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-red-200" viewbox="0 0 20 20" fill="currentColor">
-						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-					</svg>
+					<span class="w-8 h-8 text-red-200 iconify" data-icon="pepicons:electricity-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
-						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">Articles en erreur</a>
-						<p class="text-gray-500">{{totalError}}</p>
+						<a href="#" class="font-medium text-gray-900 hover:text-gray-600"> Articles cassés</a>
+						<p class="text-gray-500">{{totalError }}</p>
 					</div>
 				</div>
 			</li>
@@ -102,7 +121,7 @@
 			<div class="hidden sm:block">
 				<div class="">
 					<nav class="grid justify-center grid-cols-2 gap-6 lg:flex font-title" aria-label="Tabs">
-						<a :class="tab === 'chouineur' ? 'active text-pink-500 border-pink-500': 'hover:text-pink-300 hover:border-pink-300 text-slate-400'" @click.prevent="tab = 'chouineur'; window.location.hash = 'chouineur'" href="#" class="inline-flex items-center px-1 py-4 text-2xl font-semibold transition-all border-b-2 border-transparent group">							
+						<a :class="tab === 'chouineur' ? 'active text-pink-500 border-pink-500': 'hover:text-pink-300 hover:border-pink-300 text-slate-400'" @click.prevent="tab = 'chouineur'; window.location.hash = 'chouineur'" href="#" class="inline-flex items-center px-1 py-4 text-2xl font-semibold transition-all border-b-2 border-transparent group">
 							<span class="mr-2 text-4xl iconify" data-icon="mdi:emoticon-cry"></span>
 							<span class="uppercase whitespace-nowrap">Trouve un chouineur</span>
 						</a>
@@ -117,32 +136,34 @@
 						<a :class="tab === 'aleatoire' ? 'active text-teal-500 border-teal-500': 'hover:text-teal-300 hover:border-teal-300 text-slate-400'" @click.prevent="tab = 'aleatoire'; window.location.hash = 'aleatoire'" href="#" class="inline-flex items-center px-1 py-4 text-2xl font-semibold transition-all border-b-2 border-transparent group">
 							<span class="mr-2 text-4xl iconify" data-icon="ion:dice"></span>
 							<span class="uppercase whitespace-nowrap">4 articles au pif</span>
-						</a>						
+						</a>
 					</nav>
 				</div>
 			</div>
 		</div>
 		<div class="flex flex-col px-4 py-5 overflow-hidden shadow bg-slate-800 lg:col-span-9 sm:rounded-lg sm:px-6">
 			<div x-show="tab === 'semaine'" class="">
-			<h2 class="mb-8 text-4xl font-medium text-center text-orange-500 uppercase font-title mt-42">La semaine {{lundi| format_datetime('long', 'none', locale='fr') }}</h2>
+				<h2 class="mb-8 text-4xl font-medium text-center text-orange-500 uppercase font-title mt-42">La semaine
+					{{lundi| format_datetime('long', 'none', locale='fr') }}</h2>
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesDerniers %}
 						<li class="relative">
-							<div class="block w-full overflow-hidden bg-gray-100 rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-							{# {% if article.imageUrl %} #}
-									<img src="{{ article.imageUrl }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+							<div
+								class="block w-full overflow-hidden rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+								{# {% if article.imageUrl %} #}
+								<img src="{{ article.imageUrl }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
 								{# {% else %} #}
-									{# <img src="{{ asset(article.localImage) | imagine_filter('miniatures') }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75"> #}
-							{# {% endif %}								 #}
-								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
-									<span class="sr-only">{{article.title | raw}}</span>
+								{# <img src="{{ asset(article.localImage) | imagine_filter('miniatures') }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75"> #}
+								{# {% endif %}								 #}
+									<a href="{{article.link}}" class="absolute inset-0 focus:outline-none"> <span class="sr-only">{{article.title | raw}}</span>
 								</a>
 							</div>
 							<a href="{{article.link}}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
 							<div class="flex justify-between">
 								<p class="block text-sm font-medium text-slate-400">Il y a
 									{{article.chouineurs}}
-									chouineur{% if article.chouineurs > 1 %}s
+									chouineur
+									{% if article.chouineurs > 1 %}s
 									{% endif %}
 								</p>
 								<p class="block text-sm font-medium text-right text-slate-400">Article du
@@ -153,18 +174,18 @@
 				</ul>
 			</div>
 			<div x-show="tab === 'chouineur'" class="">
-      			<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Sauve un chouineur !</h2>
+				<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Et sauve le !</h2>
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesChouineur %}
 						<li class="relative">
-							<div class="block w-full overflow-hidden bg-gray-100 rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+							<div
+								class="block w-full overflow-hidden rounded-lg shadow-lg shadow-slate-900/40 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
 								{# {% if article.imageUrl %} #}
-									<img src="{{ article.imageUrl }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								<img src="{{ article.imageUrl }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
 								{# {% elseif article.localImage %} #}
-									{# <img src="{{ asset(article.localImage) | imagine_filter('miniatures') }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75"> #}
-							{# {% endif %}	 #}
-								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
-									<span class="sr-only">{{article.title | raw}}</span>
+								{# <img src="{{ asset(article.localImage) | imagine_filter('miniatures') }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75"> #}
+								{# {% endif %}	 #}
+									<a href="{{article.link}}" class="absolute inset-0 focus:outline-none"> <span class="sr-only">{{article.title | raw}}</span>
 								</a>
 							</div>
 							<a href="{{article.link}}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
@@ -187,7 +208,7 @@
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesFree %}
 						<li class="relative">
-							<div class="block w-full overflow-hidden bg-gray-100 rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+							<div class="block w-full overflow-hidden rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
 								<img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover pointer-events-none group-hover:opacity-75">
 								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
 									<span class="sr-only">{{article.title | raw}}</span>
@@ -204,7 +225,7 @@
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesRandom %}
 						<li class="relative">
-							<div class="block w-full overflow-hidden bg-gray-100 rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+							<div class="block w-full overflow-hidden rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
 								<img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
 								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
 									<span class="sr-only">{{article.title | raw}}</span>
