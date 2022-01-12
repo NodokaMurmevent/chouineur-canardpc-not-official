@@ -5,30 +5,38 @@
 
 {% block body %}
 
-	<h1 class="mb-4 text-6xl text-center uppercase text-slate-50 font-title">Centre de sauvetage de la chouinerie</h1>
+	<h1 class="mb-4 text-4xl text-center uppercase md:text-6xl text-slate-50 font-title">Centre de sauvetage de la chouinerie</h1>
 
-	<div class="p-4 mb-8 rounded-md bg-yellow-50">
-		<div class="flex">
+
+	<div class="p-4 border-l-4 border-yellow-400 bg-yellow-50">
+		<div class="flex items-center">
 			<div
 				class="flex-shrink-0">
-				<!-- Heroicon name: solid/exclamation -->
-				<svg class="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
-					<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-				</svg>
+				<span class="w-6 h-6 text-yellow-400 iconify" data-icon="pepicons:bell-print"></span>
 			</div>
 			<div class="ml-3">
-				<h3 class="text-sm font-medium text-yellow-800">
-					Attention
-				</h3>
-				<div class="mt-2 text-sm text-yellow-700">
-					<p>Pour le moment le site est loin d’ètre fini. Il y a de forte chance pour que les ouins ouins ne sois pas tous à jours.
-					</p>
-					<p>Je travaille encore sur une solution pour maintenir à jours les ouins sans bully le site de CPC.
-					</p>
-				</div>
+				<p class="text-sm text-yellow-700">
+					Je travaille encore sur une solution pour maintenir à jours les ouins sans bully le site de CPC.
+				</p>
 			</div>
 		</div>
 	</div>
+
+	<div class="p-4 my-4 border-l-4 border-blue-400 bg-blue-50">
+		<div class="flex items-center ">
+			<div
+				class="flex-shrink-0">
+				<!-- Heroicon name: solid/exclamation -->
+				<span class="w-6 h-6 text-blue-400 iconify" data-icon="pepicons:exclamation-print"></span>
+			</div>
+			<div class="ml-3">
+				<p class="text-sm text-blue-700">
+					Il y a des images cassées, je sais. Ce sont des vieux articles je ne corrigerais pas le soucis car je devrais relancer le scan complet du site.
+				</p>
+			</div>
+		</div>
+	</div>
+
 	<div class="mb-8">
 		<h2 class="text-xs font-medium tracking-wide uppercase text-slate-200">Infos Diverses</h2>
 		<ul role="list" class="grid grid-cols-1 gap-5 mt-3 sm:gap-6 sm:grid-cols-4">
@@ -58,11 +66,11 @@
 
 			<li class="flex col-span-1 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-sky-500 rounded-l-md">
-					<span class="w-8 h-8 text-sky-200 iconify" data-icon="pepicons:info-print"></span>
+					<span class="w-8 h-8 text-sky-200 iconify" data-icon="pepicons:bookmark-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
-						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">Nombre total d’article</a>
+						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">Nombre total d’articles</a>
 						<p class="text-gray-500">{{totalArticles}}</p>
 					</div>
 				</div>
@@ -80,7 +88,7 @@
 				</div>
 			</li>
 
-			<li class="flex col-span-1 col-start-2 rounded-md shadow-sm">
+			{# <li class="flex col-span-1 col-start-2 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-yellow-500 rounded-l-md">
 					<span class="w-8 h-8 text-yellow-200 iconify" data-icon="pepicons:pinpoint-off-print"></span>
 				</div>
@@ -90,19 +98,20 @@
 						<p class="text-gray-500">{{totalManquant}}</p>
 					</div>
 				</div>
-			</li>
+			</li> #}
 
-			<li class="flex col-span-1 rounded-md shadow-sm">
+			{# <li class="flex col-span-1 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-red-500 rounded-l-md">
 					<span class="w-8 h-8 text-red-200 iconify" data-icon="pepicons:electricity-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
-						<a href="#" class="font-medium text-gray-900 hover:text-gray-600"> Articles cassés</a>
+						<a href="#" class="font-medium text-gray-900 hover:text-gray-600">
+							Articles cassés</a>
 						<p class="text-gray-500">{{totalError }}</p>
 					</div>
 				</div>
-			</li>
+			</li> #}
 
 		</ul>
 	</div>
@@ -192,7 +201,8 @@
 							<div class="flex justify-between">
 								<p class="block text-sm font-medium text-slate-400">Il y a
 									{{article.chouineurs}}
-									chouineur{% if article.chouineurs > 1 %}s
+									chouineur
+									{% if article.chouineurs > 1 %}s
 									{% endif %}
 								</p>
 								<p class="block text-sm font-medium text-right text-slate-400">Article du

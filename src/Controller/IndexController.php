@@ -74,8 +74,8 @@ class IndexController extends AbstractController
             'nbrsChouineur' => $nbrsChouineur,
             'articlesDerniers' => $articleRepository->findWeeklyArticles($date),
             'articlesFree' => $articleRepository->findBy(['isFreeContent' => true]),
-            'totalError' => $articleRepository->count(['is404' => true]),
-            'totalManquant' => $articleRepository->count(['chouineurs' => null, 'isFreeContent' => null, 'is404' => null]),
+            // 'totalError' => $articleRepository->count(['is404' => true]),
+            // 'totalManquant' => $articleRepository->count(['chouineurs' => null, 'isFreeContent' => null, 'is404' => null]),
             'totalArticles' => $articleRepository->count([]),
             // 'totalArticlesWithChouineurs' => $articleRepository->countArticleWithChouineurs(),
         ]);
