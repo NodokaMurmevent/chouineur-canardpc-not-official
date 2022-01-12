@@ -6,6 +6,7 @@
 parameters:
     app.securetoken: '%env(APP_SECURETOKEN)%'
     articles_directory: '%kernel.project_dir%/public/uploads/articles'
+    app.env: '%env(APP_ENV)%'
 services:
     # default configuration for services in *this* file
     _defaults:

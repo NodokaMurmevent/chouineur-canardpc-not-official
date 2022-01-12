@@ -121,9 +121,24 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
         ->andWhere('a.localImage is not null')     
         ->getQuery()
-        ->getResult()
-    ;
+        ->getResult();
       }
+
+
+      
+    /**
+     * @return Article[] Returns an array of Article objects
+     */
+    public function findByRandomNoImages()
+    {
+      return $this->createQueryBuilder('a')
+      ->where('a.localImage is null')     
+      ->andWhere('a.imageALaUne is not null')
+      ->orderBy('Rand()')         
+      ->getQuery()->setMaxResults(6)
+      ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Article
     {

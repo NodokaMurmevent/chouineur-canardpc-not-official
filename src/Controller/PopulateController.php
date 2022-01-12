@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PopulateController extends AbstractController
@@ -80,46 +83,75 @@ class PopulateController extends AbstractController
 
 
 
-    #[Route('/updating-never-set-articles/{token}', name: 'updating_never_set_articles')]
-    public function index(EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null): Response
+    #[Route('/updating-articles-no-local-image/{token}', name: 'updating_articles_no_local_image')]
+    public function updatingArticlesnoLocalImage(SluggerInterface $slugger,EntityManagerInterface $em, ArticleRepository $articleRepository,$token = null): Response
     {
         
         if ($token !== $this->getParameter('app.securetoken')) {throw new AccessDeniedHttpException('No token given or token is wrong.');}
         
-        $articles = $articleRepository->findBy(["chouineurs"=>null,"isFreeContent"=>null,"is404"=>null],["realCreatedAt"=>"DESC"],40);
-
-        $browser = new HttpBrowser(HttpClient::create());       
+        $articles = $articleRepository->findByRandomNoImages();
+        
+        $devMode = $this->getParameter('app.env');
 
         foreach ($articles as $key => $article) {
-            $article->setlastCheckedAt(new \DateTimeImmutable("now"));
-            try {
-                usleep(500000);           
-                    
-                $crawler = $browser->request('GET', $article->getLink());        
-                $errorGet = false;
+            $url = parse_url($article->getImageUrl());   
+            
+            if (isset($url['host'])) {                   
 
-            } catch (\Throwable $th) {
+                $path_parts = pathinfo($url['path']);
+                $folder1 = explode('/', $path_parts['dirname'])['1'];
+                $folder2 = explode('/', $path_parts['dirname'])['2'];
+                $folderComplet = '/'.$folder1.'/'.$folder2;
                 
-                $errorGet = true;
-            }
-           
-            if (!$errorGet) {        
+                $tempFixturesPath = $this->getParameter('kernel.project_dir').'/var/tmp';             
               
-                if ($crawler->filter('.error-404')->count() > 0) {
-                    $article->setIs404(true);
-                } elseif ($access = $crawler->filter('.post-access')) {
-                    if ('Accessible à tout le monde' == $access->text()) {
-                        $article->setIsFreeContent(true);
-                    } elseif ('Accessible uniquement aux abonnés' == $access->text()) {
-                        $article->setIsFreeContent(false);
-                        $chouineur = $crawler->filter('.whines')->filter('p')->text();                        
-                        $article->setChouineurs(intval($chouineur));
+                $ch = curl_init();
+               
+                curl_setopt($ch, CURLOPT_URL, $article->getImageUrl());
+            
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+            
+                $image = curl_exec($ch);
+                if(!curl_errno($ch))
+                {
+                    $info = curl_getinfo($ch);
+                }                       
+                curl_close($ch); 
+
+                if ($info["content_type"] != "application/xml") {
+                    usleep(500000);      
+                    $imgRaw = imagecreatefromstring($image);
+                    imagejpeg($imgRaw, $tempFixturesPath.'/tmp.jpg', 100);
+                    imagedestroy($imgRaw);
+
+                    $file = new File($tempFixturesPath.'/tmp.jpg');
+
+                    $safeFilename = strtolower($slugger->slug($article->getTitle()));
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+                    if (!$devMode) {
+                        try {
+                            $file->move(
+                            $this->getParameter('articles_directory').$folderComplet,
+                            $newFilename
+                        );
+                        } catch (FileException $e) {}
                     }
+                    $article->setLocalImage("/uploads/articles".$folderComplet.'/'.$newFilename);                   
+                }else{
+                    $article->setImageALaUne(null);
                 }
-                $em->persist($article);               
-                $em->flush();
-            }  
+                $em->persist($article);      
+                
+                if (!$devMode) {
+                      $em->flush();
+                }else{
+                    dump($article);
+                    exit();
+                }
+            }
         }
+
         return new Response('success'); 
     }
 
