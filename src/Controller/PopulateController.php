@@ -91,7 +91,7 @@ class PopulateController extends AbstractController
         
         $articles = $articleRepository->findByRandomNoImages();
         
-        $devMode = $this->getParameter('app.env');
+        $devMode = ($this->getParameter('app.env') == "dev");
 
         foreach ($articles as $key => $article) {
             $url = parse_url($article->getImageUrl());   
