@@ -34,5 +34,9 @@ Si vous vous amusez à DDOS le site de CPC ça vas pas le faire !
 
 - [ ] Automatiser la mise à jour journalière des articles de 2 derniers mois.
 - [ ] Automatiser la mise à jour hebdomadaire des anciens articles.
-- [ ] Faire un design. Ça peut etre bien aussi.
-- [ ] Trouver une solution alternative à l‘update des chouineurs.
+- [X] Automatiser la récupération des nouveaux articles.
+- [X] Mise à jour des Ouin des articles de la semaine.
+- [ ] Trouver une solution pour mettre en cache les images qui sont pour le moment chargé sur le CDN.
+- [X] Faire un design. Ça peut etre bien aussi.
+- [X] Trouver une solution alternative à l‘update des chouineurs.
+- [ ] Rajouter systeme de filtre sur les chouineurs pour filtrer entre «chouineurs, récent, random».
