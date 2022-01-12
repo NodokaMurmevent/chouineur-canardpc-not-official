@@ -30,7 +30,7 @@ class IndexController extends AbstractController
             'articlesDerniers' => $articleRepository->findWeeklyArticles($date),
             'articlesFree' => $articleRepository->findBy(['isFreeContent' => true]),
             'totalArticles' => $articleRepository->count([]),
-            'totalNoLocalImage' => $articleRepository->count(['imageALaUne' => !null,'localImage' => null]),
+            'totalWithLocalImage' => $articleRepository->countImageLocal(),
             'totalImageCassee' => $articleRepository->count(['imageALaUne' => null,'localImage' => null]),
         ]);
     }

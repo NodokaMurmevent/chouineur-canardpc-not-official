@@ -139,6 +139,18 @@ class ArticleRepository extends ServiceEntityRepository
       ->getResult();
     }
 
+    /**
+     * @return Article[] Returns an array of Article objects
+     */
+    public function countImageLocal()
+    {
+      return $this->createQueryBuilder('a')
+      ->select("count(a.id)")
+      ->where('a.localImage is not null')     
+      ->andWhere('a.imageALaUne is not null')       
+      ->getQuery()
+      ->getSingleScalarResult();
+    }
     /*
     public function findOneBySomeField($value): ?Article
     {
