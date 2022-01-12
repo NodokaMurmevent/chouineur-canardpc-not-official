@@ -1,8 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sauvons les chouineurs !
-{% endblock %}
-
 {% block body %}
 
 	<h1 class="mb-4 text-4xl text-center uppercase md:text-6xl text-slate-50 font-title">Centre de sauvetage de la chouinerie</h1>
@@ -31,8 +28,7 @@
 			</div>
 			<div class="ml-3">
 				<p class="text-sm text-blue-700">
-					Il y a des images cassées, je sais. Ce sont des vieux articles je ne corrigerai pas le souci car je devrais relancer le scan complet du site. <br/>
-					Bon en fait si, ça me soule ces images. Je vais trouver une solution.
+					Il y a des images cassées, je sais. J’ai trouvé une solution c’est progressif.
 				</p>
 			</div>
 		</div>
@@ -91,7 +87,7 @@
 
 			<li class="flex col-span-1 col-start-2 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-yellow-500 rounded-l-md">
-					<span class="w-8 h-8 text-yellow-200 iconify" data-icon="pepicons:pinpoint-off-print"></span>
+					<span class="w-8 h-8 text-yellow-200 iconify" data-icon="pepicons:photo-print"></span>
 				</div>
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
@@ -159,12 +155,14 @@
 					{% for article in articlesDerniers %}
 						<li class="relative">
 							<div
-								class="block w-full overflow-hidden rounded-lg shadow bg-slate-100 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{# {% if article.imageUrl %} #}
-								<img src="{{ article.imageUrl }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{# {% else %} #}
-								{# <img src="{{ asset(article.localImage) | imagine_filter('miniatures') }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75"> #}
-								{# {% endif %}								 #}
+								class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+								{% if article.localImage and devMode == false %}
+									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% elseif article.imageUrl and article.imageALaUne %}
+									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% else %}
+									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
+								{% endif %}								
 									<a href="{{article.link}}" class="absolute inset-0 focus:outline-none"> <span class="sr-only">{{article.title | raw}}</span>
 								</a>
 							</div>
@@ -181,17 +179,19 @@
 				</ul>
 			</div>
 			<div x-show="tab === 'chouineur'" class="">
-				<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Et sauve le !</h2>
+				<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Sauve un chouineur !</h2>
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesChouineur %}
 						<li class="relative">
 							<div
-								class="block w-full overflow-hidden rounded-lg shadow-lg bg-slate-100 shadow-slate-900/40 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{# {% if article.imageUrl %} #}
-								<img src="{{ article.imageUrl }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75 ">
-								{# {% elseif article.localImage %} #}
-								{# <img src="{{ asset(article.localImage) | imagine_filter('miniatures') }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75"> #}
-								{# {% endif %}	 #}
+								class="block w-full overflow-hidden bg-white rounded-lg shadow-lg shadow-slate-900/40 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+								{% if article.localImage %}
+									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% elseif article.imageUrl and article.imageALaUne %}
+									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% else %}
+									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
+								{% endif %}
 									<a href="{{article.link}}" class="absolute inset-0 focus:outline-none"> <span class="sr-only">{{article.title | raw}}</span>
 								</a>
 							</div>
@@ -213,8 +213,14 @@
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesFree %}
 						<li class="relative">
-							<div class="block w-full overflow-hidden rounded-lg shadow bg-slate-100 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								<img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover pointer-events-none group-hover:opacity-75">
+							<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+								{% if article.localImage %}
+									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% elseif article.imageUrl and article.imageALaUne %}
+									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% else %}
+									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
+								{% endif %}
 								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
 									<span class="sr-only">{{article.title | raw}}</span>
 								</a>
@@ -230,8 +236,14 @@
 				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 					{% for article in articlesRandom %}
 						<li class="relative">
-							<div class="block w-full overflow-hidden rounded-lg shadow bg-slate-100 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								<img src="{{article.imageUrl}}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+							<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+								{% if article.localImage %}
+									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% elseif article.imageUrl and article.imageALaUne %}
+									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+								{% else %}
+									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
+								{% endif %}
 								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
 									<span class="sr-only">{{article.title | raw}}</span>
 								</a>

@@ -25,6 +25,7 @@ class IndexController extends AbstractController
             'controller_name' => 'IndexController',
             'articlesRandom' => $articleRepository->findRandomArticle(),
             'lundi' => $date,
+            'devMode' =>($this->getParameter('app.env') == "dev"),
             'articlesChouineur' => $articlesChouineur,
             'nbrsChouineur' => $nbrsChouineur,
             'articlesDerniers' => $articleRepository->findWeeklyArticles($date),

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html class="dark" lang="fr">
+<html class="dark" lang="fr"  prefix="og: http://ogp.me/ns#">
 	<head>
 		<meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>
-			{% block title %}Welcome!
+			{% block title %}Centre de sauvetage de la chouinerie
 			{% endblock %}
 		</title>
-        <meta name='description' content="Mettre une description ici en 156 caractères max">
+        <meta name='description' content="Mettre ici une description explicite en 156 caractères maximum. (Quoi ? c’est pas ça qu’il faut mettre ?)">
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -16,6 +16,23 @@
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
+
+		<meta property="og:title" content="Centre de sauvetage de la chouinerie"/>
+		<meta property="og:description" content="Mettre ici une description qui explique à quoi sert ce site. (C’est bon comme description ?)"/>
+		<meta property="og:image" content="{{ asset("/sartire.jpg") }}" />		
+		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:width" content="2484" />
+		<meta property="og:image:height" content="1360" />
+		<meta property="og:image:alt" content="BREAKING NEWS : Satire à balles réelles ici" />
+		<meta property="og:locale" content="FR">
+		<meta property="og:article:author" content="Nodoka Murmevent">
+		<meta property="og:url" content="https://chouineurs.symphonie-of-code.fr" />
+		
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@NodokaMurmevent" />
+		<meta name="twitter:creator" content="@NodokaMurmevent" />
+		
+		<meta property="og:site_name" content="Centre de sauvetage de la chouinerie">
 
 		<!-- Matomo -->
 		<script>
