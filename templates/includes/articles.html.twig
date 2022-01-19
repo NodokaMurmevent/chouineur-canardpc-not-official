@@ -1,0 +1,30 @@
+<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+	{% for article in articles %}
+		<li class="relative">
+			<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
+				{% if article.localImage and devMode == false %}
+					<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+				{% elseif article.imageUrl and article.imageALaUne %}
+					<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
+				{% else %}
+					<img src="{{ asset('/patate.jpg') }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
+				{% endif %}
+				<a href="{{ path("chouinage",{"id": article.id}) }}" class="absolute inset-0 focus:outline-none">
+					<span class="sr-only">{{article.title | raw}}</span>
+				</a>
+			</div>
+			<a href="{{ path("chouinage",{"id": article.id}) }}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
+             
+            <div class="flex justify-between">
+                {% if article.chouineurs > 0%}             
+                    <p class="block text-sm font-medium text-slate-400">
+                        Il y a {{article.chouineurs}} chouineur{% if article.chouineurs > 1 %}s{% endif %}
+                    </p>
+                {% endif %}
+                <p class="block text-sm font-medium text-right text-slate-400">
+                    Article du {{article.realCreatedAt| format_datetime('short', 'none', locale='fr') }}
+                </p>
+            </div>           
+		</li>
+	{% endfor %}
+</ul>

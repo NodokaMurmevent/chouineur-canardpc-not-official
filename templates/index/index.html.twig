@@ -44,7 +44,7 @@
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
 						<div class="font-medium text-gray-900 hover:text-gray-600">Articles Chouinés</div>
-						<p class="text-gray-500">{{articlesChouineur | length}}</p>
+						<p class="text-gray-500">{{totalArticlesChouineurs}}</p>
 					</div>
 				</div>
 			</li>
@@ -80,7 +80,7 @@
 				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
 					<div class="flex-1 px-4 py-2 text-sm truncate">
 						<div class="font-medium text-gray-900 hover:text-gray-600">Articles gratuits</a>
-						<p class="text-gray-500">{{articlesFree | length }}</p>
+						<p class="text-gray-500">{{totalArticlesFree }}</p>
 					</div>
 				</div>
 			</li>
@@ -125,108 +125,19 @@
 			<div x-show="tab === 'semaine'" class="">
 				<h2 class="mb-8 text-4xl font-medium text-center text-orange-500 uppercase font-title mt-42">La semaine
 					{{lundi| format_datetime('long', 'none', locale='fr') }}</h2>
-				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-					{% for article in articlesDerniers %}
-						<li class="relative">
-							<div
-								class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage and devMode == false %}
-									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% elseif article.imageUrl and article.imageALaUne %}
-									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% else %}
-									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
-								{% endif %}								
-									<a href="{{article.link}}" class="absolute inset-0 focus:outline-none"> <span class="sr-only">{{article.title | raw}}</span>
-								</a>
-							</div>
-							<a href="{{article.link}}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
-							<div class="flex justify-between">
-								<p class="block text-sm font-medium text-slate-400">
-									Il y a {{article.chouineurs}} chouineur{% if article.chouineurs > 1 %}s{% endif %}
-								</p>
-								<p class="block text-sm font-medium text-right text-slate-400">Article du
-									{{article.realCreatedAt| format_datetime('short', 'none', locale='fr') }}</p>
-							</div>
-						</li>
-					{% endfor %}
-				</ul>
+				{{ render(controller( 'App\\Controller\\IncludeController::recents' )) }}
 			</div>
 			<div x-show="tab === 'chouineur'" class="">
 				<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Sauve un chouineur !</h2>
-				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-					{% for article in articlesChouineur %}
-						<li class="relative">
-							<div
-								class="block w-full overflow-hidden bg-white rounded-lg shadow-lg shadow-slate-900/40 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage and devMode == false %}
-									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% elseif article.imageUrl and article.imageALaUne %}
-									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% else %}
-									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
-								{% endif %}
-									<a href="{{article.link}}" class="absolute inset-0 focus:outline-none"> <span class="sr-only">{{article.title | raw}}</span>
-								</a>
-							</div>
-							<a href="{{article.link}}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
-							<div class="flex justify-between">
-								<p class="block text-sm font-medium text-slate-400">
-									Il y a {{article.chouineurs}} chouineur{% if article.chouineurs > 1 %}s{% endif %}
-								</p>
-								<p class="block text-sm font-medium text-right text-slate-400">Article du
-									{{article.realCreatedAt| format_datetime('short', 'none', locale='fr') }}</p>
-							</div>
-						</li>
-					{% endfor %}
-				</ul>
+				{{ render(controller( 'App\\Controller\\IncludeController::chouineurs' )) }}
 			</div>
 			<div x-show="tab === 'gratuit'" class="">
-
 				<h2 class="mb-8 text-4xl font-medium text-center uppercase font-title mt-42 text-lime-500">Sinon tu veux un article gratuit ?</h2>
-				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-					{% for article in articlesFree %}
-						<li class="relative">
-							<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage and devMode == false %}
-									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% elseif article.imageUrl and article.imageALaUne %}
-									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% else %}
-									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
-								{% endif %}
-								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
-									<span class="sr-only">{{article.title | raw}}</span>
-								</a>
-							</div>
-							<p class="block mt-2 text-sm font-medium truncate pointer-events-none text-slate-300">{{article.title | raw}}</p>
-						</li>
-					{% endfor %}
-
-				</ul>
+				{{ render(controller( 'App\\Controller\\IncludeController::gratuits' )) }}
 			</div>
 			<div x-show="tab === 'aleatoire'" class="">
 				<h2 class="mb-8 text-4xl font-medium text-center text-teal-500 uppercase font-title mt-42">Ou peut être lire un article au pif ?</h2>
-				<ul role="list" class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-					{% for article in articlesRandom %}
-						<li class="relative">
-							<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage and devMode == false %}
-									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% elseif article.imageUrl and article.imageALaUne %}
-									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
-								{% else %}
-									<img src="{{ asset("/patate.jpg") }}" alt="{{article.title | raw}}" class="block w-auto mx-auto transition-all pointer-events-none group-hover:opacity-75">
-								{% endif %}
-								<a href="{{article.link}}" class="absolute inset-0 focus:outline-none">
-									<span class="sr-only">{{article.title | raw}}</span>
-								</a>
-							</div>
-							<a href="{{article.link}}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
-						</li>
-					{% endfor %}
-
-				</ul>
+   				{{ render(controller( 'App\\Controller\\IncludeController::randoms' )) }}
 			</div>
 		</div>
 	</div>

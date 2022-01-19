@@ -68,6 +68,9 @@ class Article
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $localImage;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isRecentClicked;
+
 
     public function getId()
     {
@@ -241,6 +244,18 @@ class Article
     public function setLocalImage(?string $localImage): self
     {
         $this->localImage = $localImage;
+
+        return $this;
+    }
+
+    public function getIsRecentClicked(): ?bool
+    {
+        return $this->isRecentClicked;
+    }
+
+    public function setIsRecentClicked(bool $isRecentClicked): self
+    {
+        $this->isRecentClicked = $isRecentClicked;
 
         return $this;
     }
