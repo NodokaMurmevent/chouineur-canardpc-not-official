@@ -36,7 +36,7 @@
 
 	<div class="mb-8">
 		<h2 class="text-xs font-medium tracking-wide uppercase text-slate-200">Infos Diverses</h2>
-		<ul role="list" class="grid grid-cols-1 gap-5 mt-3 sm:gap-6 sm:grid-cols-4">
+		<ul role="list" class="grid grid-cols-1 gap-5 mt-3 sm:gap-6 md:grid-cols-2 xl:grid-cols-4">
 			<li class="flex col-span-1 rounded-md shadow-sm">
 				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-green-500 rounded-l-md">
 					<span class="w-8 h-8 text-green-200 iconify" data-icon="pepicons:bookmark-print"></span>
@@ -84,32 +84,6 @@
 					</div>
 				</div>
 			</li>
-
-			<li class="flex col-span-1 col-start-2 rounded-md shadow-sm">
-				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-yellow-500 rounded-l-md">
-					<span class="w-8 h-8 text-yellow-200 iconify" data-icon="pepicons:photo-print"></span>
-				</div>
-				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
-					<div class="flex-1 px-4 py-2 text-sm truncate">
-						<div class="font-medium text-gray-900 hover:text-gray-600">Images locales</div>
-						<p class="text-gray-500">{{totalWithLocalImage}}</p>
-					</div>
-				</div>
-			</li>
-
-			<li class="flex col-span-1 rounded-md shadow-sm">
-				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-red-500 rounded-l-md">
-					<span class="w-8 h-8 text-red-200 iconify" data-icon="pepicons:electricity-print"></span>
-				</div>
-				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
-					<div class="flex-1 px-4 py-2 text-sm truncate">
-						<div class="font-medium text-gray-900 hover:text-gray-600">
-							Images cassées</div>
-						<p class="text-gray-500">{{ totalImageCassee}}</p>
-					</div>
-				</div>
-			</li>
-
 		</ul>
 	</div>
 	<div class="px-4 mx-auto max-w-8xl sm:px-6 lg:px-8" x-data="{ tab: window.location.hash ? window.location.hash.substring(1) : 'chouineur' }" id="tab_wrapper">
@@ -185,7 +159,7 @@
 						<li class="relative">
 							<div
 								class="block w-full overflow-hidden bg-white rounded-lg shadow-lg shadow-slate-900/40 group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage %}
+								{% if article.localImage and devMode == false %}
 									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
 								{% elseif article.imageUrl and article.imageALaUne %}
 									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
@@ -214,7 +188,7 @@
 					{% for article in articlesFree %}
 						<li class="relative">
 							<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage %}
+								{% if article.localImage and devMode == false %}
 									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
 								{% elseif article.imageUrl and article.imageALaUne %}
 									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
@@ -237,7 +211,7 @@
 					{% for article in articlesRandom %}
 						<li class="relative">
 							<div class="block w-full overflow-hidden bg-white rounded-lg shadow group aspect-w-10 aspect-h-7 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-slate-500 focus-within:ring-pink-500">
-								{% if article.localImage %}
+								{% if article.localImage and devMode == false %}
 									<img src="{{ article.localImage }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
 								{% elseif article.imageUrl and article.imageALaUne %}
 									<img src="{{ asset(article.imageUrl) }}" alt="{{article.title | raw}}" class="object-cover transition-all pointer-events-none group-hover:opacity-75">
@@ -255,5 +229,36 @@
 				</ul>
 			</div>
 		</div>
+	</div>
+
+	<div class="mt-8">
+		<h2 class="text-xs font-medium tracking-wide uppercase text-slate-200 ">Infos Diverses</h2>
+		<ul role="list" class="grid grid-cols-1 gap-5 mt-3 sm:gap-6 sm:grid-cols-2">
+			<li class="flex rounded-md shadow-sm">
+				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-yellow-500 rounded-l-md">
+					<span class="w-8 h-8 text-yellow-200 iconify" data-icon="pepicons:photo-print"></span>
+				</div>
+				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
+					<div class="flex-1 px-4 py-2 text-sm truncate">
+						<div class="font-medium text-gray-900 hover:text-gray-600">Images locales</div>
+						<p class="text-gray-500">{{totalWithLocalImage}}</p>
+					</div>
+				</div>
+			</li>
+
+			<li class="flex rounded-md shadow-sm">
+				<div class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-red-500 rounded-l-md">
+					<span class="w-8 h-8 text-red-200 iconify" data-icon="pepicons:electricity-print"></span>
+				</div>
+				<div class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
+					<div class="flex-1 px-4 py-2 text-sm truncate">
+						<div class="font-medium text-gray-900 hover:text-gray-600">
+							Images cassées</div>
+						<p class="text-gray-500">{{ totalImageCassee}}</p>
+					</div>
+				</div>
+			</li>
+
+		</ul>
 	</div>
 {% endblock %}

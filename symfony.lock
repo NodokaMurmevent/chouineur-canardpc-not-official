@@ -122,6 +122,9 @@
             "config/routes/liip_imagine.yaml"
         ]
     },
+    "matomo/matomo-php-tracker": {
+        "version": "3.0.4"
+    },
     "monolog/monolog": {
         "version": "2.3.5"
     },
