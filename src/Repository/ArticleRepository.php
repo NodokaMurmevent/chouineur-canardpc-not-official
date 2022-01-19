@@ -47,6 +47,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->where('a.chouineurs > 0 ')
             ->orderBy('a.chouineurs', 'DESC')
+            ->orderBy('a.realCreatedAt', 'DESC')
             // ->setMaxResults(10)
             ->getQuery()
             ->getResult()
