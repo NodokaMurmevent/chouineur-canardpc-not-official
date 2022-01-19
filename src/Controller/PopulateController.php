@@ -39,6 +39,7 @@ class PopulateController extends AbstractController
                 $article->setExcerpt(strip_tags($value['excerpt']['rendered']));
                 $article->setGuid($value['id']);
                 $article->setLink($value['link']);
+                $article->setIsRecentClicked(false);
 
                 $article->setRealCreatedAt(new \DateTimeImmutable($value['date_gmt']));
                 $article->setRealUpdatedAt(new \DateTimeImmutable($value['modified_gmt']));
