@@ -7,8 +7,7 @@
 
 	<div class="p-4 border-l-4 border-yellow-400 bg-yellow-50">
 		<div class="flex items-center">
-			<div
-				class="flex-shrink-0">
+			<div class="flex-shrink-0">
 				<span class="w-6 h-6 text-yellow-400 iconify" data-icon="pepicons:bell-print"></span>
 			</div>
 			<div class="ml-3">
@@ -19,20 +18,20 @@
 		</div>
 	</div>
 
-	<div class="p-4 my-4 border-l-4 border-blue-400 bg-blue-50">
-		<div class="flex items-center ">
-			<div
-				class="flex-shrink-0">
-				<!-- Heroicon name: solid/exclamation -->
-				<span class="w-6 h-6 text-blue-400 iconify" data-icon="pepicons:exclamation-print"></span>
+	{# <div class="p-4 my-4 border-l-4 border-blue-400 bg-blue-50">
+			<div class="flex items-center ">
+				<div
+					class="flex-shrink-0">
+					<!-- Heroicon name: solid/exclamation -->
+					<span class="w-6 h-6 text-blue-400 iconify" data-icon="pepicons:exclamation-print"></span>
+				</div>
+				<div class="ml-3">
+					<p class="text-sm text-blue-700">
+						Il y a des images cassées, je sais. J’ai trouvé une solution c’est progressif.
+					</p>
+				</div>
 			</div>
-			<div class="ml-3">
-				<p class="text-sm text-blue-700">
-					Il y a des images cassées, je sais. J’ai trouvé une solution c’est progressif.
-				</p>
-			</div>
-		</div>
-	</div>
+		</div> #}
 
 	<div class="mb-8">
 		<h2 class="text-xs font-medium tracking-wide uppercase text-slate-200">Infos Diverses</h2>
@@ -102,8 +101,13 @@
 				<div class="">
 					<nav class="grid justify-center grid-cols-2 gap-6 lg:flex font-title" aria-label="Tabs">
 						<a :class="tab === 'chouineur' ? 'active text-pink-500 border-pink-500': 'hover:text-pink-300 hover:border-pink-300 text-slate-400'" @click.prevent="tab = 'chouineur'; window.location.hash = 'chouineur'" href="#" class="inline-flex items-center px-1 py-4 text-2xl font-semibold transition-all border-b-2 border-transparent group">
+						{% if totalArticlesChouineurs > 0 %}
 							<span class="mr-2 text-4xl iconify" data-icon="mdi:emoticon-cry"></span>
 							<span class="uppercase whitespace-nowrap">Trouve un chouineur</span>
+							{% else %}
+								<span class="mr-2 text-4xl iconify" data-icon="mdi:robot-confused"></span>
+								<span class="uppercase whitespace-nowrap">MAIS ! OU qu’ils sont !</span>
+							{% endif %}							
 						</a>
 						<a :class="tab === 'semaine' ? 'active text-orange-500 border-orange-500': 'hover:text-orange-300 hover:border-orange-300 text-slate-400'" @click.prevent="tab = 'semaine'; window.location.hash = 'semaine'" href="#" class="inline-flex items-center px-1 py-4 text-2xl font-semibold transition-all border-b-2 border-transparent group">
 							<span class="mr-2 text-3xl iconify" data-icon="bi:calendar-week-fill"></span>
@@ -128,8 +132,16 @@
 				{{ render(controller( 'App\\Controller\\IncludeController::recents' )) }}
 			</div>
 			<div x-show="tab === 'chouineur'" class="">
-				<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Sauve un chouineur !</h2>
-				{{ render(controller( 'App\\Controller\\IncludeController::chouineurs' )) }}
+				{% if totalArticlesChouineurs > 0 %}
+					<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Sauve un chouineur !</h2>
+					{{ render(controller( 'App\\Controller\\IncludeController::chouineurs' )) }}
+				{% else %}
+
+					<h2 class="mb-8 text-4xl font-medium text-center text-pink-500 uppercase font-title mt-42">Diantre ?! Flibusterie ! Il n’y a plus aucun chouineurs !</h2>
+
+
+				{% endif %}
+
 			</div>
 			<div x-show="tab === 'gratuit'" class="">
 				<h2 class="mb-8 text-4xl font-medium text-center uppercase font-title mt-42 text-lime-500">Sinon tu veux un article gratuit ?</h2>
@@ -137,7 +149,7 @@
 			</div>
 			<div x-show="tab === 'aleatoire'" class="">
 				<h2 class="mb-8 text-4xl font-medium text-center text-teal-500 uppercase font-title mt-42">Ou peut être lire un article au pif ?</h2>
-   				{{ render(controller( 'App\\Controller\\IncludeController::randoms' )) }}
+				{{ render(controller( 'App\\Controller\\IncludeController::randoms' )) }}
 			</div>
 		</div>
 	</div>

@@ -46,6 +46,7 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->where('a.chouineurs > 0 ')
+            ->andWhere('a.isFreeContent = false ')
             ->orderBy('a.chouineurs', 'DESC')
             ->orderBy('a.realCreatedAt', 'DESC')
             // ->setMaxResults(10)
@@ -59,6 +60,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->select('count(a.id)')
             ->where('a.chouineurs > 0 ')
+            ->andWhere('a.isFreeContent = false ')
             ->getQuery()
             ->getSingleScalarResult()
         ;

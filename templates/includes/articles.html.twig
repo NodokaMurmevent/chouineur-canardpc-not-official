@@ -16,9 +16,13 @@
 			<a href="{{ path("chouinage",{"id": article.id}) }}" class="block mt-2 text-sm font-medium truncate text-slate-300">{{article.title | raw}}</a>
              
             <div class="flex justify-between">
-                {% if article.chouineurs > 0%}             
+                {% if article.chouineurs > 0 and article.isFreeContent == false %}             
                     <p class="block text-sm font-medium text-slate-400">
                         Il y a {{article.chouineurs}} chouineur{% if article.chouineurs > 1 %}s{% endif %}
+                    </p>
+				{% elseif article.chouineurs > 0 and article.isFreeContent == true %}
+					 <p class="block text-sm font-medium text-slate-400">
+                        Gratuit
                     </p>
                 {% endif %}
                 <p class="block text-sm font-medium text-right text-slate-400">
